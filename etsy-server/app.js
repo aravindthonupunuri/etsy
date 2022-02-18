@@ -51,6 +51,24 @@ app.post("/create/profile", (req, res) => {
     }
   );
 });
+
+app.get("/getUser/:name", (req, res) => {
+  const {name} = req.params;
+  connection.query(
+    "SELECT name, password from users where name = ?",
+    [name], (err, result) => {
+      console.log(result);
+      if (err) {
+        console.log(err);
+        res.status(401).send(err.message);
+        // throw(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+})
+
 // app.use(function (req, res, next) {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader("Access-Control-Allow-Credentials", "true");
