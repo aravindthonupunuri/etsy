@@ -1,68 +1,65 @@
 import Cookies from 'js-cookie';
-import { Component } from 'react';
 import { Container, Row, Form, Col, Button, InputGroup, Alert } from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom';
-import { withRouter } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 import backendServer from '../../webconfig';
+import { useDispatch } from "react-redux";
+import { login } from "../../features/userReducer";
+import React, {useState} from 'react';
+import { useHistory } from "react-router";
 
 require('./Login.css');
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      password: '',
-      signin: false
-    };
-  }
-
-  goSignup = () => {
-    console.log('in go signup');
-    this.props.history.replace("/signup");
-  };
-
-  checkLogin = (e) => {
-    e.preventDefault();
-    const { name, password } = this.state;
-    fetch(`${backendServer}/getUser/${name}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(
-      (res) => res.json()
-    ).then(
-      (res) => {
-        console.log(res[0].password);
-        console.log(this.state.password);
-        if (res[0].password == this.state.password) {
-          // console.log(this.state);          
-          Cookies.set('token', 'true');
-          console.log("cookies are set");
-          this.setState({ signin: true })
-        }
-      }
+const Login = () => {
+  const history = useHistory();
+    const [{name, password, signin}, setState] = useState(
+    {name: '',
+    password: '',
+    signin: false}
     )
-  }
 
-  render() {
-    const { signin } = this.state;
-    if (signin) {
-      return <Redirect to="/" />
+    const goSignup = () => {
+      console.log('in go signup');
+      history.replace("/signup");
+    };
+  
+    const checkLogin = (e) => {
+      e.preventDefault();
+      fetch(`${backendServer}/getUser/${name}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(
+        (res) => res.json()
+      ).then(
+        (res) => {
+          console.log(res[0].password);
+          if (res[0].password == password) {        
+            Cookies.set('token', 'true');
+            console.log("cookies are set");
+            setState(preState => ({...preState, signin: true }))
+          }
+        }
+      )
     }
-    return (
-      <div class ='center'>
+
+    return (      
+      signin ? <div>
+        {console.log("hiii  " + name, password, signin)}
+        <Redirect to="/" />
+        </div> :
+      <div className ='center'>
+        {console.log(name, password, signin)}
         <Container>
-          <Form onSubmit={this.checkLogin}>
+          <Form onSubmit={checkLogin}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Name</Form.Label>
-              <Form.Control className='inputDim' type="name" placeholder="Enter name" onChange={(e) => this.setState({ name: e.target.value })} />
+              <Form.Control className='inputDim' type="name" placeholder="Enter name" onChange={(e) => setState(preState => ({...preState, name: e.target.value  }))} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control className='inputDim' type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} />
+              <Form.Control className='inputDim' type="password" placeholder="Password" onChange={(e) => setState(preState => ({...preState, password: e.target.value  }))} />
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
@@ -76,14 +73,9 @@ class Login extends Component {
            </Col>
          </Row>
        </Container>
-        {/* <button onClick={this.goSignup}>
-          register here
-        </button> */}
-        <Button variant="primary" onClick={this.goSignup}>Register here</Button>
+        <Button variant="primary" onClick={goSignup}>Register here</Button>
       </div>
     );
-  }
 }
 
-// export default Login;
-export default withRouter(Login);
+export default Login;

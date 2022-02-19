@@ -1,34 +1,25 @@
-import {Component} from 'react';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
+import React, {useState} from "react";
 
-class Logout extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-           isLoggedOut: false
-        }
-    }
-    removeCookie = () => {
-        
+const Logout = () => {
+    const [isLoggedOut, setIsLogOut] = useState(false);
+    const removeCookie = () => {        
         Cookies.remove('token');
         console.log("removinig cookies");
-        this.setState({isLoggedOut: true})
+        setIsLogOut( prev => !prev)
     }
-    render() {
-        const {isLoggedOut} = this.state;
-        if(!isLoggedOut) {
-            return (
-                <div>
-                    <button onClick={this.removeCookie}>
-                        logout
-                    </button>
-                </div>
-            )
-        }
-        else {
-            return <Redirect to = "/login" />
-        }
+    if(!isLoggedOut) {
+        return (
+            <div>
+                <button onClick={removeCookie}>
+                    logout
+                </button>
+            </div>
+        )
+    }
+    else {
+        return <Redirect to = "/login" />
     }
 }
 
