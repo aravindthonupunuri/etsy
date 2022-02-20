@@ -1,15 +1,16 @@
 import Cookies from 'js-cookie';
-import { Container, Row, Form, Col, Button, InputGroup, Alert } from 'react-bootstrap';
+import { Container, Row, Form, Col, Button} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import backendServer from '../../webconfig';
-import { useDispatch } from "react-redux";
-import { login } from "../../features/userReducer";
 import React, {useState} from 'react';
 import { useHistory } from "react-router";
+import {useSelector, useDispatch} from "react-redux";
+import {loginState} from "../../redux/index"
 
 require('./Login.css');
 
-const Login = () => {
+const Login = (props) => {
+  const dispatch = useDispatch();
   const history = useHistory();
     const [{name, password, signin}, setState] = useState(
     {name: '',
@@ -34,8 +35,8 @@ const Login = () => {
       ).then(
         (res) => {
           console.log(res[0].password);
-          if (res[0].password == password) {        
-            Cookies.set('token', 'true');
+          if (res[0].password === password) {        
+            dispatch(loginState(res[0].name, res[0].password));
             console.log("cookies are set");
             setState(preState => ({...preState, signin: true }))
           }
@@ -76,6 +77,16 @@ const Login = () => {
         <Button variant="primary" onClick={goSignup}>Register here</Button>
       </div>
     );
+}
+
+// function mapStateToProps(globalState) {
+//   return {
+//     token : globalState
+//   }
+// }
+
+const mapDispatchToPros = {
+  setLogin: loginState
 }
 
 export default Login;
