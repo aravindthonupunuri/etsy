@@ -1,40 +1,28 @@
-/* eslint-disable no-debugger */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/static-property-placement */
-/* eslint-disable no-useless-escape */
-// import { Button, TextField } from '@mui/material';
-// import { Container, Row, Col, } from 'react-bootstrap';
-import {
-  Container, Row, Form, Col, Button, InputGroup
-} from 'react-bootstrap';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import backendServer from '../../webconfig';
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router";
+import logo from "../../images/logo.png"
+
 require('./SignUp.css');
 
-class SignUp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      email_id: '',
-      password: ''
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
 
-  handleSubmit = (e) => {
+function SignUp() {
+  const history = useHistory();
+  const [{ name, emailId, password }, setSignupState] = useState({
+    name: "",
+    emailId: "",
+    password: ""
+  })
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email_id, password } = this.state;
-    console.log(`${name} ${email_id} ${password}`);
+    console.log(`${name} ${emailId} ${password}`);
     const customer = {
+      emailId: emailId,
       name: name,
-      emailId: email_id,
-      password: password,
-      address: 'address',
-      phone_number: 'phonenumber'
+      password: password
     };
-    fetch(`${backendServer}/create/profile`, {
+    fetch(`${backendServer}/api/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,79 +30,63 @@ class SignUp extends Component {
       mode: 'cors',
       body: JSON.stringify(customer),
     }).then(
-      (res) => { console.log(res); }
+      (res) => {
+        console.log("no error from user registration");
+        console.log(res);
+        history.replace("/login");
+      }
+    ).catch(() => {
+      console.log("error in registration")
+      alert("user alreay exists please login.")
+    }
     );
-    console.log(`${name} ${email_id} ${password}`);
-    this.props.history.replace("/login");
+    // console.log(`${name} ${emailId} ${password}`);
   };
 
-  render() {
-    const {
-      name, emailId, password
-    } = this.state;
-
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Container>
-          <br />
-          <br />
-          <Row>
-            <Col md={2}>{' '}</Col>
-            <Col>
-              <div className="heading-content">
-                Please Enter Details For Registering
-              </div>        
-            </Col>
-          </Row>
-          <br />
-          <br />
-          <Row>
-            <Col md={4}>{' '}</Col>
-            <Col md={4} className="login-form-container">
-              <br />
-              <Form className="login-form mx-auto" noValidate>
-                <Form.Group className="mb-2" controlId="formBasicName">
-                  <Form.Label>Full Name</Form.Label>
-                  <InputGroup hasValidation>
-                    <Form.Control type="text" placeholder="Enter full name" value={name} onChange={(e) => this.setState({ name: e.target.value })} required />
-                    <Form.Control.Feedback type="invalid">
-                      Please enter your Full Name.
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group className="mb-2" controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <InputGroup hasValidation>
-                    <Form.Control type="email" placeholder="Enter email" value={emailId} onChange={(e) => this.setState({ emailId: e.target.value })} required />
-                    <Form.Control.Feedback type="invalid">
-                      Please enter email adress in proper format.
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group className="mb-2" controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => this.setState({ password: e.target.value })} required />
-                  <Form.Control.Feedback type="invalid">
-                    Please enter your password
-                  </Form.Control.Feedback>
-                </Form.Group>
-                
-                <div className="d-grid gap-4 ">
-                  <Button variant="primary" size="lg" type="submit" onClick={this.handleSubmit}>
-                    Register
-                  </Button>
-                </div>
-              </Form>
-              <br />
-              <br />
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
+  const handleEvent = (event) => {
+    setSignupState(preState => ({...preState,  [event.target.name] : event.target.value}))
   }
+
+  return (
+    <div className="container" style={{ width: '25%' }}>
+      <div style={{ textAlign: 'center', marginTop: '17%' }}>
+
+        <form onSubmit={handleSubmit}>
+          <div ><img style={{ width: '85%' }} src={logo} alt="Uber Eats" /></div>
+          <div >
+            <div style={{ marginTop: '3%' }}>
+              <h3>Please register here</h3>
+            </div>
+            <div className="form-group" style={{ marginTop: '5%' }}>
+              <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label>Email address : </label></div>
+              <input onChange={handleEvent} name="emailId" value={emailId} className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter Email" autoFocus required={true} />
+            </div>
+            <div className="form-group" style={{ marginTop: '5%' }}>
+              <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label htmlFor="name">User name : </label></div>
+              <input onChange={handleEvent} name="name" value={name} className="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter Name" autoFocus required={true} />
+            </div>
+            <div className="form-group" style={{ marginTop: '5%' }}>
+              <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label htmlFor="password">Password : </label></div>
+              <input onChange={handleEvent} type="password" name="password" value={password} className="form-control" id="password" aria-describedby="nameHelp" placeholder="Enter Password" autoFocus required={true} />
+            </div>
+            {/* <div className="text-danger">
+       {this.state.loginError!==""?<h5>{this.state.loginError}.Please Try again!</h5>:null}
+    </div> */}
+            <br />
+            <button type="submit" className="btn btn-success btn-lg btn-block" style={{ width: "350px" }}>SignUp</button>
+          </div>
+          <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}>
+               Do you already have an account?
+              <span>
+                <a href='/login'>
+                 login
+                </a>               
+              </span>                
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-export default withRouter(SignUp);
+export default SignUp;

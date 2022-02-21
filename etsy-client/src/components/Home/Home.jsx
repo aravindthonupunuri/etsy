@@ -3,12 +3,15 @@ import Logout from '../Logout/Logout';
 import logo from '../../images/logo.png'
 import { Container, Row, Col } from 'react-bootstrap';
 import React from 'react';
-import {useSelector} from "react-redux"
-import SearchBar from "material-ui-search-bar";
+import { useSelector } from "react-redux"
+import SearchIcon from '@mui/icons-material/Search';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+require("./Home.css")
 
 function Home() {
-  const checkName = useSelector(state => state.name);
-  if(checkName === "") <Redirect to="/login" />;
+  const checkName = useSelector((state) => state.loginState.name);
+  if (checkName === "") return <Redirect to="/login" />;
+  else 
   return (
     <div>
       <Container>
@@ -16,7 +19,15 @@ function Home() {
           <Col>
             <img width='100px' src={logo} alt="Logo" />
           </Col>
-          <SearchBar/>
+          <Col>
+            <SearchIcon />
+          </Col>
+          <Col>
+            <div onClick={() => { console.log("hi") }}>
+              <FavoriteIcon className='favoritee' />
+            </div>
+
+          </Col>
           <Col>
             <Logout />
           </Col>

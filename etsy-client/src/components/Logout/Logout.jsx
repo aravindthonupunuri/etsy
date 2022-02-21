@@ -1,18 +1,18 @@
-import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import loginAction from "../../actions/loginAction"
 
 const Logout = () => {
+    const dispatch = useDispatch();
     const [isLoggedOut, setIsLogOut] = useState(false);
-    const removeCookie = () => {        
-        Cookies.remove('token');
-        console.log("removinig cookies");
-        setIsLogOut( prev => !prev)
-    }
     if(!isLoggedOut) {
         return (
             <div>
-                <button onClick={removeCookie}>
+                <button onClick={() => {
+                    setIsLogOut( prev => !prev);
+                    dispatch(loginAction("", ""));
+                    }}>
                     logout
                 </button>
             </div>
