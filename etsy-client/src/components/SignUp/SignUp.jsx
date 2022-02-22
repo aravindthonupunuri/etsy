@@ -7,6 +7,7 @@ require('./SignUp.css');
 
 
 function SignUp() {
+  const [loginError, setErrorMsg] = useState("");
   const history = useHistory();
   const [{ name, emailId, password }, setSignupState] = useState({
     name: "",
@@ -14,7 +15,7 @@ function SignUp() {
     password: ""
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(`${name} ${emailId} ${password}`);
     const customer = {
@@ -22,29 +23,24 @@ function SignUp() {
       name: name,
       password: password
     };
-    fetch(`${backendServer}/api/user/register`, {
+    let res = await fetch(`${backendServer}/api/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       mode: 'cors',
       body: JSON.stringify(customer),
-    }).then(
-      (res) => {
-        console.log("no error from user registration");
-        console.log(res);
-        history.replace("/login");
-      }
-    ).catch(() => {
-      console.log("error in registration")
-      alert("user alreay exists please login.")
+    })
+    if (res.status === 200) {
+      history.replace("/login");
     }
-    );
-    // console.log(`${name} ${emailId} ${password}`);
+    else {
+      setErrorMsg("please enter valid credentials for registration")
+    }
   };
 
   const handleEvent = (event) => {
-    setSignupState(preState => ({...preState,  [event.target.name] : event.target.value}))
+    setSignupState(preState => ({ ...preState, [event.target.name]: event.target.value }))
   }
 
   return (
@@ -69,19 +65,19 @@ function SignUp() {
               <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label htmlFor="password">Password : </label></div>
               <input onChange={handleEvent} type="password" name="password" value={password} className="form-control" id="password" aria-describedby="nameHelp" placeholder="Enter Password" autoFocus required={true} />
             </div>
-            {/* <div className="text-danger">
-       {this.state.loginError!==""?<h5>{this.state.loginError}.Please Try again!</h5>:null}
-    </div> */}
+            <div className="text-danger">
+              {loginError !== "" ? <h5>{loginError}!</h5> : null}
+            </div>
             <br />
             <button type="submit" className="btn btn-success btn-lg btn-block" style={{ width: "350px" }}>SignUp</button>
           </div>
           <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}>
-               Do you already have an account?
-              <span>
-                <a href='/login'>
-                 login
-                </a>               
-              </span>                
+            Do you already have an account?
+            <span>
+              <a href='/login'>
+                login
+              </a>
+            </span>
           </div>
         </form>
       </div>

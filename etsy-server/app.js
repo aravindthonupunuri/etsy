@@ -3,11 +3,8 @@ var express = require("express");
 //create  an express app
 var app = express();
 var path = require('path');
-var signupRouter = require("./routes/signup");
 //require express middleware body-parser
 var bodyParser = require("body-parser");
-//require express session
-var session = require("express-session");
 //require cookie parser
 var cookieParser = require("cookie-parser");
 //import cors
@@ -24,13 +21,23 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions))
-app.use("/api/user", signupRouter);
+// app.use("/api/user", signupRouter);
 
-app.get("/", function (req, res) {
-  res.send("I am here");
-});
+// app.get("/", function (req, res) {
+//   res.send("I am here");
+// });
 
-app.listen(3001);
-console.log("Server Listening on port 3001");
+// app.listen(3001);
+// console.log("Server Listening on port 3001");
 
-module.exports = app;
+// module.exports = app;
+
+const userRoute = require('./routes/userRoutes');
+const shopRoute = require('./routes/shopRoutes');
+
+//Route Middlewares
+app.use('/api/user', userRoute);
+app.use('/api', shopRoute);
+
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -12,6 +12,7 @@ const Logout = () => {
                 <button onClick={() => {
                     setIsLogOut( prev => !prev);
                     dispatch(loginAction("", ""));
+                    sessionStorage.clear('token');
                     }}>
                     logout
                 </button>
