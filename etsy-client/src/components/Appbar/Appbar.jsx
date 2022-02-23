@@ -19,14 +19,13 @@ export default function Appbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <FormControl type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
         <Nav>
-          <Nav.Link onClick={() => console.log("hi")} href="#home">Search</Nav.Link>
+          <Nav.Link href="#home">Search</Nav.Link>
           <Nav.Link onClick={
             () => hist.replace("/")
           }>Home</Nav.Link>
           <Nav.Link >Favorites</Nav.Link>
           <Nav.Link onClick={
-            
-            () => {console.log("in shop");hist.replace("/shop")}
+            () => {hist.replace("/shop")}
           }>Shop</Nav.Link>
           <Nav.Link onClick={
             () => hist.replace("/profile")

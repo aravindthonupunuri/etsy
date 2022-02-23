@@ -59,7 +59,6 @@ router.post('/login', (req, res) => {
     });
 })
 
-
 router.get('/profile', verify, (req, res) => {
     console.log(req.params);
     connection.query(

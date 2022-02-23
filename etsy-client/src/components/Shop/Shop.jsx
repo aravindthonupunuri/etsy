@@ -4,11 +4,11 @@ import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 
 export default function Shop() {
-    const [nameOfShop, setShopName] = useState(""); 
+    const [nameOfShop, setShopName] = useState("");
     const [shopDetails, setShopDetails] = useState({});
     const [userDetails, setUserDetails] = useState({});
-    const [isShop, setShop] = useState(false);
-    const [errorMsg, setErrorMsg] = useState(false);
+    const [isShop, setShop] = useState(null);
+    const [errorMsg, setErrorMsg] = useState("");
     let checkShop = async () => {
         const token = sessionStorage.getItem('token');
         let res = await fetch(`${backendServer}/api/shop`, {
@@ -21,11 +21,9 @@ export default function Shop() {
         })
         let shopDetails = await res.json();
         console.log(shopDetails.length)
-        console.log(shopDetails);
         if (shopDetails.length !== 0) {
             console.log("hii using effect 200..!")
-            shopDetails = shopDetails[0]; 
-            console.log(shopDetails);
+            shopDetails = shopDetails[0];
             setShopDetails(shopDetails);
             setShop(true);
         }
@@ -35,7 +33,17 @@ export default function Shop() {
         }
     }
 
-    // useEffect(() => {checkShop()}, [])
+    useEffect(() => {
+        checkShop()
+        console.log("in use effect")
+    }, [])
+
+    useEffect(
+        () => {
+            getUserDetails()
+            console.log("getting user details in use effect");
+        }, []
+    )
 
     const getUserDetails = async () => {
         const token = sessionStorage.getItem('token');
@@ -47,11 +55,9 @@ export default function Shop() {
             },
             mode: 'cors'
         })
-        console.log("came to fetch user details")
         let result = await res.json();
         result = result[0];
         setUserDetails(result);
-        // return result[0];
     }
 
     const checkAndCreateShop = async () => {
@@ -59,38 +65,32 @@ export default function Shop() {
             shopname: nameOfShop,
             shopimage: "image"
         }
-           const token = sessionStorage.getItem('token');
-           let res = await fetch(`${backendServer}/api/upload/shop`, {
+        const token = sessionStorage.getItem('token');
+        let res = await fetch(`${backendServer}/api/upload/shop`, {
             method: 'POST',
             headers: {
-              'auth-token': token,
-              'Content-Type': 'application/json'
+                'auth-token': token,
+                'Content-Type': 'application/json'
             },
             mode: 'cors',
             body: JSON.stringify(obj),
-          })
-          if(res.status === 200) setShop(true);   
-          else setErrorMsg(true);
+        })
+        if (res.status === 200) {
+            setShop(true);
+            setShopDetails(obj)
+        }
+        else setErrorMsg("shop name already exits enter a valid shop name");
     }
-    
-    if(!isShop)
-    checkShop();
 
-    if(isShop) {
-         
-        console.log("checking user details" + userDetails)
-        if(userDetails.username === undefined) {
-            getUserDetails(); 
-            console.log("getting user detrails")
-               
-        }   
+    if (isShop === true) {
         let shopname = shopDetails.shopname
+        console.log(userDetails.username)
         let username = userDetails.username
         return <div>
             <Appbar />
             <div>
                 <h1>
-                  Welcome {username}
+                    Welcome {username}
                 </h1>
                 <h2>
                     This is your shop name {shopname}
@@ -98,21 +98,22 @@ export default function Shop() {
             </div>
         </div>
     }
-    else {
+    else if (isShop === false) {
         return <div>
+            {console.log("in return")}
             <Appbar />
-        <div>
-            <FormControl onChange={(e) => {setShopName(e.target.value)}}  style={{ width: "800px", marginTop: "100px", left: 0, marginLeft: "100px" }} type="search" placeholder="Enter Shop Name" className="mr-2 barsize" aria-label="Search" />
-
-            <div className="text-danger">
-                  {errorMsg ? <h5>{errorMsg}</h5> : null}
+            <div>
+                <FormControl onChange={(e) => { setShopName(e.target.value) }} style={{ width: "800px", marginTop: "100px", left: 0, marginLeft: "100px" }} type="search" placeholder="Enter Shop Name" className="mr-2 barsize" aria-label="Search" />                
+                <div className="text-danger" style={{ marginLeft: "400px" }}>
+                    {errorMsg !== "" ? <h5>{errorMsg}</h5> : null}
+                </div>
+                <button onClick={checkAndCreateShop} className="btn btn-warning btn-lg btn-block" style={{ marginLeft: "400px", marginTop: "10px" }}>
+                    Check Availability
+                </button>
             </div>
-            <button onClick={checkAndCreateShop} className="btn btn-warning btn-lg btn-block" style={{marginLeft: "400px", marginTop: "10px"}}>
-                Check Availability
-            </button>
-            
-
         </div>
-    </div>
+    }
+    else {
+        return <div></div>
     }
 }

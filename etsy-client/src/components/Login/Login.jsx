@@ -25,7 +25,7 @@ const Login = () => {
   }
 
   const checkLogin = async (e) => {
-    console.log("hi")
+    // console.log("hi")
     e.preventDefault();
     let res = await fetch(`${backendServer}/api/user/login`, {
       method: 'POST',
@@ -36,10 +36,10 @@ const Login = () => {
       body: JSON.stringify({ emailId, password }),
     })
     let token = await res.text();
-    console.log(res.status);
+    // console.log(res.status);
     if (res.status === 200) {
-      console.log("in codeeee")
-      console.log(res.headers)
+      // console.log("in codeeee")
+      // console.log(res.headers)
       dispatch(loginAction(emailId, password));
       sessionStorage.setItem('token', token);
       history.replace('/');
