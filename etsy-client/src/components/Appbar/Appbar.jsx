@@ -13,7 +13,7 @@ export default function Appbar() {
 
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand>
           <img style={{ width: '30%' }} src={logo} alt="Etsy" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -24,15 +24,9 @@ export default function Appbar() {
             () => hist.replace("/")
           }>Home</Nav.Link>
           <Nav.Link >Favorites</Nav.Link>
-          <Nav.Link onClick={
-            () => {hist.replace("/shop")}
-          }>Shop</Nav.Link>
-          <Nav.Link onClick={
-            () => hist.replace("/profile")
-          }>Profile</Nav.Link>
-          <Nav.Link onClick={
-            () => hist.replace("/cart")
-          }>Cart</Nav.Link>
+          <Nav.Link href="/shop"> Shop </Nav.Link>
+          <Nav.Link href='/profile'>Profile</Nav.Link>
+          <Nav.Link href='/cart'>Cart</Nav.Link>
           <Nav.Link onClick={
             () => hist.replace("/orders")
           }>Orders</Nav.Link>

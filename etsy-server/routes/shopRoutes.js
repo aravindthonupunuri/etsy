@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { connection } = require('../dbconfig');
 const verify = require('./verifyToken');
-
+const { v4: uuidv4 } = require('uuid');
 
 router.get('/shop', verify, async (req, res) => {
     console.log(req.user);
@@ -71,11 +71,9 @@ router.post('/upload/shop', verify, (req, res) => {
 })
 
 
-router.get('/shop/items/:shopname', verify, async (req, res) => {
-    const {shopname} = req.params;
-    
+router.get('/item/categories', verify, (req, res) => {
     connection.query(
-        "SELECT * FROM Items where shopname = ?" , [shopname] , (err, result) =>{
+        "SELECT * FROM ItemCategory"  ,(err, result) =>{
             if(err) {
                 console.log(err);
             } else {
@@ -86,13 +84,27 @@ router.get('/shop/items/:shopname', verify, async (req, res) => {
 })
 
 
-
-router.post('/shop/add/item', verify, async (req, res) => {
-    const { itemname, itemimage, category_id, description, price, available_quantity, shopname} = req.body;
+router.post('/item/add/category', verify, (req, res) => {
+    const {category} = req.body;
 
     connection.query(
-        "INSERT INTO Items (itemname, itemimage, category_id, description, price, available_quantity, shopname) values (?,?,?,?,?,?,?)",
-        [itemname, itemimage, category_id, description, price, available_quantity, shopname],
+        "INSERT INTO ItemCategory (category) values (?)" , [category], (err, result) =>{
+            if(err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    )
+})
+
+
+router.post('/shop/add/item', verify, (req, res) => {
+    const { itemname, itemimage, description, price, available_quantity, category_id, shopname} = req.body;
+    console.log(category_id);
+    connection.query(
+        "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category_id, shopname) values (?,?,?,?,?,?,?,?)",
+        [uuidv4(), itemname, itemimage, description, price, available_quantity, category_id, shopname],
         (error, result) =>{
             if(error) {
                 console.log(error)
@@ -105,6 +117,36 @@ router.post('/shop/add/item', verify, async (req, res) => {
 })
 
 
+router.put('/shop/update/item', verify, (req, res) => {
+    const { id, itemname, description, price, available_quantity} = req.body;
 
+    let sql = "UPDATE Items SET itemname = ?, description = ?, price = ?, available_quantity = ? where id = ?";
+
+    connection.query(
+        sql, [itemname, description, price, available_quantity, id],
+        (error, result) =>{
+            if(error) {
+                console.log(error)
+                res.status(400).send(error.message)
+            } else {
+                res.status(200).send("Item updated");
+            }
+        }
+    )
+})
+
+router.get('/shop/items/:shopname', verify, (req, res) => {
+    const {shopname} = req.params;
+    
+    connection.query(
+        "SELECT * FROM Items where shopname = ?" , [shopname] , (err, result) =>{
+            if(err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    )
+})
 
 module.exports = router;

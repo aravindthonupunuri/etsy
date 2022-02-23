@@ -1,13 +1,10 @@
 import { Redirect } from 'react-router-dom';
-import Logout from '../Logout/Logout';
-import logo from '../../images/logo.png'
-import { Container, Row, Col } from 'react-bootstrap';
 import React from 'react';
 import { useSelector } from "react-redux"
 import Appbar from '../Appbar/Appbar';
 require("./Home.css")
 
-function Home() {
+export default function Home() {
   const checkName = useSelector((state) => state.loginState.name);
   const token = sessionStorage.getItem('token');
   // console.log("hi token   !" + token);
@@ -19,5 +16,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home
