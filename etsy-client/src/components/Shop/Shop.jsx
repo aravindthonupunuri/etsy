@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Col, FormControl, Row } from 'react-bootstrap';
 import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
-import Item from '../Item/Item'
+import Item from '../Item/Item';
+import ItemComponent from '../ItemComponent/ItemComponent';
 
 export default function Shop() {
     const [nameOfShop, setShopName] = useState("");
@@ -39,8 +40,9 @@ export default function Shop() {
     }, [])
 
     useEffect(
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps        
         async () => {
+            console.log("in component of shop!")
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/profile`, {
                 method: 'GET',
@@ -126,18 +128,11 @@ export default function Shop() {
                     {
                         shopItems.map(
                             shopItem =>
-                            (
-                                <Col sm={2}>
-                                    {shopItem.itemname}
-                                    <br />
-                                    {shopItem.itemimage}
-                                    <br />
-                                    {shopname}
-                                    <br />
-                                    <br>
-                                    </br>
-                                </Col>
-                            )
+                            {return <>
+                              <ItemComponent key={shopItem.id} id={shopItem.id} item={shopItem} />
+                              <br /><br /><br />
+                            </>
+                            }
                         )
                     }
                 </Row>

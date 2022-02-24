@@ -7,11 +7,9 @@ const verify = require('./verifyToken');
 const db = require('../dbconfig');
 var connection = db.connection;
 
-
 router.post('/register', async (req, res) => {
     const {name, emailId, password} = req.body;
     console.log(req.body);
-
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
@@ -28,7 +26,6 @@ router.post('/register', async (req, res) => {
         }
     )
 })
-
 
 router.post('/login', (req, res) => {
     const {emailId, password} = req.body;
@@ -73,13 +70,10 @@ router.get('/profile', verify, (req, res) => {
     )
 })
 
-
 router.put('/update/profile', verify, (req, res) => {
    const {emailId, username, phonenumber, gender, city, countryId, dateofbirth, address, about} = req.body;
    console.log(req.user.id);
-   
    let sql = "UPDATE User SET emailId = ?, username = ?, phonenumber = ?, gender = ?, city = ?, countryId = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
-
    connection.query(
     sql, [emailId, username, phonenumber, gender, city, countryId, dateofbirth, address, about, req.user.id],
     (err, result) =>{
@@ -91,7 +85,6 @@ router.put('/update/profile', verify, (req, res) => {
     }
   )
 })
-
 
 router.put("/uploadProfilePic", verify, (req, res) => {
   const {img} = req.body;
@@ -110,11 +103,9 @@ router.put("/uploadProfilePic", verify, (req, res) => {
   )
 });
 
-
 router.post("/add/favourite", verify, (req, res) => {
   const {itemId} = req.body;
   console.log(req.body);
-
   connection.query(
       "INSERT into favorites(id, itemId, userId) values(?,?,?)",
       [uuidv4(), req.user.id, itemId],
@@ -128,9 +119,7 @@ router.post("/add/favourite", verify, (req, res) => {
   )
 });
 
-
 router.get("/favourites", verify, (req, res) => {
-
   connection.query(
       "SELECT * FROM favorites where id = ?", [req.user.id],
       (err, result) => {
@@ -142,7 +131,5 @@ router.get("/favourites", verify, (req, res) => {
       }
   )
 });
-
-
 
 module.exports = router;

@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import backendServer from '../../webconfig';
 // import { useDispatch } from "react-redux";
 import setHomeReduxFromDb from "../../actions/homeAction";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ItemComponent from '../ItemComponent/ItemComponent';
 import { Col, Row } from 'react-bootstrap';
 require("./Home.css")
 
@@ -44,18 +46,13 @@ export default function Home() {
           {
             homeItems.map(
               homeItem =>
-              (
-                <Col sm={2}>
-                  {homeItem.itemname}
-                  <br />
-                  {homeItem.itemimage}
-                  <br>
-                  </br>
-                </Col>
-              )
+              (<>
+                <ItemComponent key={homeItem.id} id={homeItem.id} item={homeItem} />
+                <br /><br /><br />
+              </>)
             )
           }
         </Row>
-      </div>
+      </div >
     );
 }

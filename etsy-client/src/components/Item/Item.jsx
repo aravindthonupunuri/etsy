@@ -37,7 +37,7 @@ export default function Item(props) {
             mode: 'cors',
             body: JSON.stringify({ itemname, itemimage, itemdescription, categoryid, shopname }),
         })
-        dispatch()
+        // dispatch()
         handleClose()
     }
 
