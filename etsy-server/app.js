@@ -34,10 +34,12 @@ app.use(cors(corsOptions))
 
 const userRoute = require('./routes/userRoutes');
 const shopRoute = require('./routes/shopRoutes');
+const homeRoute = require('./routes/homeRoutes');
 
 //Route Middlewares
 app.use('/api/user', userRoute);
 app.use('/api', shopRoute);
+app.use('/api', homeRoute);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));

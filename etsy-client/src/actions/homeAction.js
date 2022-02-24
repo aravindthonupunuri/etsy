@@ -1,9 +1,8 @@
-import loginAction from "./loginAction";
 import backendServer from '../webconfig';
 
 export default function setHomeReduxFromDb(payload) {
     return (dispatch) => {
-        fetch(`${backendServer}/api/shop`, {
+        fetch(`${backendServer}/api/items`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

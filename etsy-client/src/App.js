@@ -5,6 +5,7 @@ import SignUp from './components/SignUp/SignUp';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import Shop from './components/Shop/Shop';
+import Profile from './components/Profile/Profile';
 
 function NotFound() {
   return <div>not found man!!</div>;
@@ -24,6 +25,9 @@ function App() {
         </Route>  
         <Route path="/shop">
           <Shop />
+        </Route>  
+        <Route path="/profile">
+          <Profile />
         </Route>        
         <Route path="*" component={NotFound} />
       </Switch>

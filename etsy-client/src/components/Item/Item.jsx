@@ -73,9 +73,7 @@ export default function Item(props) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button onClick={
-
-                    addItem} variant="primary">
+                <Button onClick={addItem} variant="primary">
                     Save Changes
                 </Button>
             </Modal.Footer>
