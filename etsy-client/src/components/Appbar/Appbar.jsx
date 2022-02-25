@@ -4,11 +4,18 @@ import {
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
-import logo from '../../images/logo.png'
+import logo from '../../images/logo.png';
+import { useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 require('./Appbar.css')
 
-export default function Appbar() {
+export default function Appbar(props) {
   const hist = useHistory();
+  const [nameToSearch, setNameToSearch] = useState("");
+  const handleEvent = (e) => {
+    setNameToSearch(e.target.value);
+  }
+
   return (
 
     <Navbar bg="light" expand="lg">
@@ -17,9 +24,11 @@ export default function Appbar() {
           <img style={{ width: '30%' }} src={logo} alt="Etsy" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <FormControl type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
+        <FormControl onChange={handleEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
         <Nav>
-          <Nav.Link href="#home">Search</Nav.Link>
+          <Nav.Link>
+            <SearchIcon onClick={() => props.filterItems(nameToSearch)} />
+          </Nav.Link>
           <Nav.Link onClick={
             () => hist.replace("/")
           }>Home</Nav.Link>

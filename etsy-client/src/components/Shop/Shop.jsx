@@ -128,10 +128,10 @@ export default function Shop() {
                     {
                         shopItems.map(
                             shopItem =>
-                            {return <>
+                            {return <div key={shopItem.id}>
                               <ItemComponent key={shopItem.id} id={shopItem.id} item={shopItem} />
                               <br /><br /><br />
-                            </>
+                            </div>
                             }
                         )
                     }

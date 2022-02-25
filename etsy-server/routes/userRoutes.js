@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     connection.query(
-        "INSERT INTO User (id, username, emailId, password, phonenumber, profilePicture, gender, city, countryId, dateofbirth, address) values (?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO User (id, username, emailId, password, phonenumber, profilePicture, gender, city, country, dateofbirth, address) values (?,?,?,?,?,?,?,?,?,?,?)",
         [uuidv4(), name, emailId, hashPassword, null, null, null, null, null, null, null],
         (error, result) =>{
             if(error) {
@@ -71,11 +71,11 @@ router.get('/profile', verify, (req, res) => {
 })
 
 router.put('/update/profile', verify, (req, res) => {
-   const {emailId, username, phonenumber, gender, city, countryId, dateofbirth, address, about} = req.body;
+   const {emailId, username, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
    console.log(req.user.id);
-   let sql = "UPDATE User SET emailId = ?, username = ?, phonenumber = ?, gender = ?, city = ?, countryId = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
+   let sql = "UPDATE User SET emailId = ?, username = ?, phonenumber = ?, gender = ?, city = ?, country = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
    connection.query(
-    sql, [emailId, username, phonenumber, gender, city, countryId, dateofbirth, address, about, req.user.id],
+    sql, [emailId, username, phonenumber, gender, city, country, dateofbirth, address, about, req.user.id],
     (err, result) =>{
         if(err){
           res.status(400).send(error.message);

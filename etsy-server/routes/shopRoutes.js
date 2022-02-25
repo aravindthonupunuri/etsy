@@ -83,28 +83,12 @@ router.get('/item/categories', verify, (req, res) => {
     )
 })
 
-
-router.post('/item/add/category', verify, (req, res) => {
-    const {category} = req.body;
-
-    connection.query(
-        "INSERT INTO ItemCategory (category) values (?)" , [category], (err, result) =>{
-            if(err) {
-                console.log(err);
-            } else {
-                res.send(result);
-            }
-        }
-    )
-})
-
-
 router.post('/shop/add/item', verify, (req, res) => {
-    const { itemname, itemimage, description, price, available_quantity, category_id, shopname} = req.body;
-    console.log(category_id);
+    const { itemname, itemimage, description, price, available_quantity, category, shopname} = req.body;
+    console.log(category);
     connection.query(
-        "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category_id, shopname) values (?,?,?,?,?,?,?,?)",
-        [uuidv4(), itemname, itemimage, description, price, available_quantity, category_id, shopname],
+        "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
+        [uuidv4(), itemname, itemimage, description, price, available_quantity, category, shopname],
         (error, result) =>{
             if(error) {
                 console.log(error)

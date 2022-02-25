@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import backendServer from '../../webconfig';
 import { Button, Container, Modal } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function Profile() {
     console.log("in profile..");
@@ -26,6 +27,7 @@ export default function Profile() {
     )
 
     const handleEvent = (event) => {
+        console.log("event is " + event.target.value)
         setUpdatedProfile(preState => ({ ...preState, [event.target.name]: event.target.value }))
     }
 
@@ -66,7 +68,7 @@ export default function Profile() {
             profilePicture: profilePicture,
             about: about
         }
-        let res = await fetch(`${backendServer}/api/user/update/profile`, {
+        await fetch(`${backendServer}/api/user/update/profile`, {
             method: 'PUT',
             headers: {
                 'auth-token': token,
@@ -74,13 +76,32 @@ export default function Profile() {
             },
             mode: 'cors',
             body: JSON.stringify(body),
-        })        
+        })
         setUpdatedProfileToggle(preState => {
             console.log("set profile detials redunda");
             return !preState
         }
         )
-        handleClose()        
+        handleClose()
+    }
+
+    let countries = [
+        "india", "america", "australia", "england"
+    ]
+
+    function getCountries() {
+        console.log("in countries")
+        return countries.map(
+            country => (
+                <MenuItem 
+                // name="country"
+                // id="country"
+                onChange={handleEvent}
+                value={country}
+                > {country} 
+                </MenuItem>
+            )
+        )
     }
 
     return <div>
@@ -134,9 +155,18 @@ export default function Profile() {
                     </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Country : </label></div>
-                        <input
-                            onChange={handleEvent}
-                            name="username" value={country} className="form-control" id="country" aria-describedby="countryHelp" placeholder="Country" autoFocus required={true} />
+                        
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Select Country</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                name="country"
+                                id="country"
+                                onChange={handleEvent}
+                            >
+                                {getCountries()}
+                            </Select>
+                        </FormControl>
                     </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Gender : </label></div>

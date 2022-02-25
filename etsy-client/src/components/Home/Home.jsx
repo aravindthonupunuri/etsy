@@ -13,6 +13,7 @@ require("./Home.css")
 
 export default function Home() {
   let [homeItems, setHomeItems] = useState([]);
+  let [filtItems, filteredHomeItems] = useState([]);
   // let dispatch = useDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // useEffect(dispatch(setHomeReduxFromDb), [])
@@ -29,6 +30,7 @@ export default function Home() {
       let homeItems = await res.json();
       console.log("items in home" + homeItems.length);
       setHomeItems(homeItems)
+      filteredHomeItems(filtItems)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   // homeItems = useSelector((state) => {
@@ -36,20 +38,27 @@ export default function Home() {
   //   return state.homeState.items
   // }
   //   );
+  function filterItems(name) {
+    console.log("in home filter items" + name);
+    let res = homeItems.filter(
+      homeItem => homeItem.itemname.includes(name)
+    )
+    filteredHomeItems(res)
+  }
   const token = sessionStorage.getItem('token');
   if (token === null) return <Redirect to="/login" />;
   else
     return (
       <div>
-        <Appbar />
+        <Appbar filterItems={filterItems} />
         <Row>
           {
-            homeItems.map(
+            filtItems.map(
               homeItem =>
-              (<>
-                <ItemComponent key={homeItem.id} id={homeItem.id} item={homeItem} />
+              (<React.Fragment key={homeItem.id}>
+                <ItemComponent id={homeItem.id} item={homeItem} />
                 <br /><br /><br />
-              </>)
+              </React.Fragment>)
             )
           }
         </Row>
