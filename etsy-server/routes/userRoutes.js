@@ -107,11 +107,11 @@ router.post("/add/favourite", verify, (req, res) => {
   const {itemId} = req.body;
   console.log(req.body);
   connection.query(
-      "INSERT into favorites(id, itemId, userId) values(?,?,?)",
-      [uuidv4(), req.user.id, itemId],
+      "INSERT into Favourites(id, itemId, userId) values(?,?,?)",
+      [uuidv4(), itemId, req.user.id],
       (err, result) =>{
           if(err){
-            res.status(400).send(error.message);
+            res.status(400).send(err.message);
           } else {
               res.status(200).send(result);
           }
@@ -121,15 +121,31 @@ router.post("/add/favourite", verify, (req, res) => {
 
 router.get("/favourites", verify, (req, res) => {
   connection.query(
-      "SELECT * FROM favorites where id = ?", [req.user.id],
+      "SELECT * FROM Favourites where userId = ?", [req.user.id],
       (err, result) => {
           if(err){
-            res.status(400).send(error.message);
+            res.status(400).send(err.message);
           } else {
               res.status(200).send(result);
           }
       }
   )
 });
+
+router.delete("/favourites/:itemId", verify, (req, res) => {
+  const {itemId} = req.params;
+  console.log("in delete fav" + itemId)
+  connection.query(
+    "DELETE FROM Favourites where itemId = ?", [itemId],
+    (err, result) => {
+        if(err){
+          res.status(400).send(err.message);
+        } else {
+            res.status(200).send(result);
+        }
+    }
+)  
+})
+
 
 module.exports = router;

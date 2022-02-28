@@ -30,7 +30,7 @@ export default function Home() {
       let homeItems = await res.json();
       console.log("items in home" + homeItems.length);
       setHomeItems(homeItems)
-      filteredHomeItems(filtItems)
+      filteredHomeItems(homeItems)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   // homeItems = useSelector((state) => {
@@ -51,11 +51,13 @@ export default function Home() {
     return (
       <div>
         <Appbar filterItems={filterItems} />
+        {console.log("in display items" + filtItems.length)}
         <Row>
-          {
+          {            
             filtItems.map(
               homeItem =>
               (<React.Fragment key={homeItem.id}>
+                {console.log(homeItem.id)}
                 <ItemComponent id={homeItem.id} item={homeItem} />
                 <br /><br /><br />
               </React.Fragment>)

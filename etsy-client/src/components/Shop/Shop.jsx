@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Col, FormControl, Row } from 'react-bootstrap';
+import { Col, Container, FormControl, Row } from 'react-bootstrap';
 import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import Item from '../Item/Item';
 import ItemComponent from '../ItemComponent/ItemComponent';
+import SearchIcon from '@mui/icons-material/Search';
+
+require('./Shop.css');
 
 export default function Shop() {
     const [nameOfShop, setShopName] = useState("");
     const [shopItems, setShopItems] = useState([]);
+    const [filtereShopItems, setFilterShopItems] = useState([]);
     const [shopDetails, setShopDetails] = useState({});
     const [userDetails, setUserDetails] = useState({});
     const [isShop, setShop] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
+    const [nameToSearch, setNameToSearch] = useState("");
+    const handleEvent = (e) => {
+        setNameToSearch(e.target.value);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
@@ -79,14 +87,16 @@ export default function Shop() {
         console.log("doneee get shop items")
         // console.log("huhu " + result[0].itemname);
         setShopItems(result);
+        setFilterShopItems(result);
     }
-
 
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         // eslint-disable-next-line no-use-before-define
         getShopItems, [shopDetails]
     );
+
+
 
     const checkAndCreateShop = async () => {
         const obj = {
@@ -110,6 +120,14 @@ export default function Shop() {
         else setErrorMsg("shop name already exits enter a valid shop name");
     }
 
+    function filterItems(name) {
+        console.log("in home filter items" + name);
+        let res = shopItems.filter(
+            shopItem => shopItem.itemname.includes(name)
+        )
+        setFilterShopItems(res)
+    }
+
     if (isShop === true) {
         let shopname = shopDetails.shopname
         let username = userDetails.username
@@ -124,14 +142,27 @@ export default function Shop() {
                     This is your shop name {shopname}
                 </h2>
                 <p> These are your items.. </p>
+                <p>
+                    <Container>
+                        <Row>
+                            <Col md={2}>
+                                <FormControl onChange={handleEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
+
+                            </Col>
+                            <Col>
+                                <SearchIcon onClick={() => filterItems(nameToSearch)} />
+                            </Col>
+                        </Row>
+                    </Container>
+                </p>
                 <Row>
                     {
-                        shopItems.map(
-                            shopItem =>
-                            {return <div key={shopItem.id}>
-                              <ItemComponent key={shopItem.id} id={shopItem.id} item={shopItem} />
-                              <br /><br /><br />
-                            </div>
+                        filtereShopItems.map(
+                            shopItem => {
+                                return <div key={shopItem.id}>
+                                    <ItemComponent key={shopItem.id} id={shopItem.id} item={shopItem} />
+                                    <br /><br /><br />
+                                </div>
                             }
                         )
                     }
@@ -144,7 +175,9 @@ export default function Shop() {
         return <div>
             <Appbar />
             <div>
-                <FormControl onChange={(e) => { setShopName(e.target.value) }} style={{ width: "800px", marginTop: "100px", left: 0, marginLeft: "100px" }} type="search" placeholder="Enter Shop Name" className="mr-2 barsize" aria-label="Search" />
+                <FormControl onChange={(e) => { setShopName(e.target.value) }}
+                    style={{ width: "300px", marginTop: "100px", left: 0, marginLeft: "100px" }}
+                    type="search" placeholder="Enter Shop Name" className="mr-2 barsize" aria-label="Search" />
                 <div className="text-danger" style={{ marginLeft: "400px" }}>
                     {errorMsg !== "" ? <h5>{errorMsg}</h5> : null}
                 </div>

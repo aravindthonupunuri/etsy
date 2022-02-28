@@ -2,7 +2,6 @@ import {
   Navbar, Nav, FormControl, Form, ListGroupItem, Container, Button,
 } from 'react-bootstrap';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import logo from '../../images/logo.png';
 import { useState } from 'react';

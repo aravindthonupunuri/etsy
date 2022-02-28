@@ -107,6 +107,10 @@ export default function Profile() {
     return <div>
         <Appbar />
         <Container>
+            {/* <input type="file" accept = "image/*"></input>
+            <button onClick={onHandle}> 
+                upload
+            </button> */}
             <div>
                 name: {profileDetails.username}
             </div>

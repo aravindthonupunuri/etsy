@@ -28,7 +28,7 @@ export default function Item(props) {
 
     async function addItem() {
         let token = sessionStorage.getItem('token');
-        let res = await fetch(`${backendServer}/api/shop/add/item`, {
+        await fetch(`${backendServer}/api/shop/add/item`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
