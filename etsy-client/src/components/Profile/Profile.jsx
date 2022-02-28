@@ -5,9 +5,21 @@ import backendServer from '../../webconfig';
 import { Button, Container, Modal } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL
+} from "firebase/storage";
+import noProfileImage from "../../images/logo.png";
+import firebaseApp from "../../firebaseConfig";
 
 export default function Profile() {
     console.log("in profile..");
+
+    const [shopImageFile, setshopImageFile] = useState(null);
+    const [shopImageFileUrl, setshopImageFileUrl] = useState(noProfileImage);
+
     const [profileDetails, setProfileDetails] = useState([]);
     const [updatedProfileToggle, setUpdatedProfileToggle] = useState(false);
 
@@ -25,6 +37,51 @@ export default function Profile() {
             about: ""
         }
     )
+
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        const storage = getStorage(firebaseApp);
+        const imagesRef = ref(storage, "images");
+
+        const uploadTask = uploadBytesResumable(imagesRef, shopImageFile);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                console.log(error.code);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    const token = sessionStorage.getItem("token");
+                    console.log("File available at", downloadURL);
+                    setshopImageFileUrl(downloadURL);
+                    const profileImage = {
+                        image: downloadURL,
+                    };
+                    // debugger;
+                    fetch(`${backendServer}/api/user/uploadProfilePic`, {
+                        method: "PUT",
+                        headers: {
+                            "auth-token": token,
+                            "Content-Type": "application/json",
+                        },
+                        mode: "cors",
+                        body: JSON.stringify(profileImage),
+                    }).then((res) => {
+                        console.log(res);
+                    });
+                });
+            }
+        );
+
+
+    }
 
     const handleEvent = (event) => {
         console.log("event is " + event.target.value)
@@ -93,12 +150,12 @@ export default function Profile() {
         console.log("in countries")
         return countries.map(
             country => (
-                <MenuItem 
-                // name="country"
-                // id="country"
-                onChange={handleEvent}
-                value={country}
-                > {country} 
+                <MenuItem
+                    // name="country"
+                    // id="country"
+                    onChange={handleEvent}
+                    value={country}
+                > {country}
                 </MenuItem>
             )
         )
@@ -107,10 +164,27 @@ export default function Profile() {
     return <div>
         <Appbar />
         <Container>
-            {/* <input type="file" accept = "image/*"></input>
-            <button onClick={onHandle}> 
-                upload
-            </button> */}
+            <span>
+                <img
+                    className="shop-image"
+                    style={{ width: "200px", height: "210px" }}
+                    src={shopImageFileUrl}
+                    alt="alt"
+                />
+            </span>
+            <input
+                type="file"
+                required
+                className="custom-file-input"
+                name="res_file"
+                accept="image/*"
+                onChange={(e) => {
+                    setshopImageFile(e.target.files[0]);
+                }}
+            />
+            <button type="submit" onClick={handleUpload}>
+                Upload
+            </button>
             <div>
                 name: {profileDetails.username}
             </div>
@@ -159,7 +233,7 @@ export default function Profile() {
                     </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Country : </label></div>
-                        
+
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Select Country</InputLabel>
                             <Select

@@ -87,12 +87,12 @@ router.put('/update/profile', verify, (req, res) => {
 })
 
 router.put("/uploadProfilePic", verify, (req, res) => {
-  const {img} = req.body;
+  const {image} = req.body;
   console.log(req.body);
 
   connection.query(
       "UPDATE User SET profilePicture = ? where id = ?",
-      [img, req.user.id],
+      [image, req.user.id],
       (err, result) =>{
           if(err){
             res.status(400).send(error.message);

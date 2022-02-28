@@ -133,4 +133,22 @@ router.get('/shop/items/:shopname', verify, (req, res) => {
     )
 })
 
+router.put("/shop/uploadImage", verify, (req, res) => {
+    const { name, image } = req.body;
+  
+    connection.query(
+      "UPDATE Shop SET shopimage = ? where shopname = ?",
+      [image, name],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          res.status(400).send(error.message);
+        } else {
+          console.log(result);
+          res.status(200).send("Image uploaded");
+        }
+      }
+    );
+  });
+
 module.exports = router;
