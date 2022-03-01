@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Appbar from "../Appbar/Appbar";
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import backendServer from '../../webconfig';
-import { Button, Container, Modal } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {
@@ -11,17 +11,58 @@ import {
     uploadBytesResumable,
     getDownloadURL
 } from "firebase/storage";
-import noProfileImage from "../../images/logo.png";
+import noProfileImage from "../../images/noprofileimage.png";
 import firebaseApp from "../../firebaseConfig";
+import ItemComponent from "../ItemComponent/ItemComponent";
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function Profile() {
     console.log("in profile..");
 
-    const [shopImageFile, setshopImageFile] = useState(null);
-    const [shopImageFileUrl, setshopImageFileUrl] = useState(noProfileImage);
+    const [profileImageFile, setProfileImageFile] = useState(null);
+    const [profileImageFileUrl, setProfileImageFileUrl] = useState(noProfileImage);
+    const [filtereProfileItems, setFilterProfileItems] = useState([]);
 
     const [profileDetails, setProfileDetails] = useState([]);
     const [updatedProfileToggle, setUpdatedProfileToggle] = useState(false);
+    const [favouriteItems, setFavouriteItems] = useState([]);
+
+    const [nameToSearch, setNameToSearch] = useState("");
+    const handleFilterEvent = (e) => {
+        setNameToSearch(e.target.value);
+    }
+
+    useEffect(
+        async () => {
+            console.log("in set profile details");
+            const token = sessionStorage.getItem('token');
+            let res = await fetch(`${backendServer}/api/user/favourites`, {
+                method: 'GET',
+                headers: {
+                    'auth-token': token,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            let result = await res.json();
+            let favItems = [];
+            for (let i = 0; i < result.length; i++) {
+                let res = await fetch(`${backendServer}/api/item/${result[i].itemId}`, {
+                    method: 'GET',
+                    headers: {
+                        'auth-token': token,
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors'
+                })
+                res = await res.json();
+                console.log(res[0])
+                favItems.push(res[0])
+            }
+            setFavouriteItems(favItems);
+            setFilterProfileItems(favItems);
+        }, []
+    )
 
     const [{ emailId, username, dateofbirth, phonenumber, address, country, gender, city, profilePicture, about }, setUpdatedProfile] = useState(
         {
@@ -43,7 +84,7 @@ export default function Profile() {
         const storage = getStorage(firebaseApp);
         const imagesRef = ref(storage, "images");
 
-        const uploadTask = uploadBytesResumable(imagesRef, shopImageFile);
+        const uploadTask = uploadBytesResumable(imagesRef, profileImageFile);
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.on(
@@ -60,7 +101,7 @@ export default function Profile() {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     const token = sessionStorage.getItem("token");
                     console.log("File available at", downloadURL);
-                    setshopImageFileUrl(downloadURL);
+                    setProfileImageFileUrl(downloadURL);
                     const profileImage = {
                         image: downloadURL,
                     };
@@ -142,6 +183,14 @@ export default function Profile() {
         handleClose()
     }
 
+    function filterItems(name) {
+        console.log("in home filter items" + name);
+        let res = favouriteItems.filter(
+            favItem => favItem.itemname.includes(name)
+        )
+        setFilterProfileItems(res)
+    }
+
     let countries = [
         "india", "america", "australia", "england"
     ]
@@ -167,8 +216,8 @@ export default function Profile() {
             <span>
                 <img
                     className="shop-image"
-                    style={{ width: "200px", height: "210px" }}
-                    src={shopImageFileUrl}
+                    style={{ width: "200px", height: "200px" }}
+                    src={profileImageFileUrl}
                     alt="alt"
                 />
             </span>
@@ -179,7 +228,7 @@ export default function Profile() {
                 name="res_file"
                 accept="image/*"
                 onChange={(e) => {
-                    setshopImageFile(e.target.files[0]);
+                    setProfileImageFile(e.target.files[0]);
                 }}
             />
             <button type="submit" onClick={handleUpload}>
@@ -192,6 +241,19 @@ export default function Profile() {
                 email: {profileDetails.emailId}
             </div>
         </Container>
+
+
+        <Container>
+            <Row>
+                <Col md={2}>
+                    <FormControl onChange={handleFilterEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
+                </Col>
+                <Col>
+                    <SearchIcon onClick={() => filterItems(nameToSearch)} />
+                </Col>
+            </Row>
+        </Container>
+
         <div onClick={handleShow}>
             <EditIcon />
         </div>
@@ -278,5 +340,20 @@ export default function Profile() {
 
             </Modal.Footer>
         </Modal>
+        <Container>
+            <Row>
+                <Col>
+                    {
+                        filtereProfileItems.map(favouriteItem =>
+                        (<React.Fragment key={favouriteItem.id}>
+                            {console.log(favouriteItem.id)}
+                            <ItemComponent id={favouriteItem.id} item={favouriteItem} />
+                            <br /><br /><br />
+                        </React.Fragment>)
+                        )
+                    }
+                </Col>
+            </Row>
+        </Container>
     </div>
 }

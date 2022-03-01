@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import backendServer from '../../webconfig';
 // import { useDispatch } from "react-redux";
 import setHomeReduxFromDb from "../../actions/homeAction";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ItemComponent from '../ItemComponent/ItemComponent';
 import { Col, Row } from 'react-bootstrap';
 require("./Home.css")
@@ -14,6 +13,7 @@ require("./Home.css")
 export default function Home() {
   let [homeItems, setHomeItems] = useState([]);
   let [filtItems, filteredHomeItems] = useState([]);
+  let token = sessionStorage.getItem('token');
   // let dispatch = useDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // useEffect(dispatch(setHomeReduxFromDb), [])
@@ -23,6 +23,7 @@ export default function Home() {
       let res = await fetch(`${backendServer}/api/items`, {
         method: 'GET',
         headers: {
+          'auth-token': token,
           'Content-Type': 'application/json'
         },
         mode: 'cors'
@@ -45,7 +46,6 @@ export default function Home() {
     )
     filteredHomeItems(res)
   }
-  const token = sessionStorage.getItem('token');
   if (token === null) return <Redirect to="/login" />;
   else
     return (

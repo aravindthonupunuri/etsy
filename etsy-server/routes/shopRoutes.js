@@ -70,25 +70,14 @@ router.post('/upload/shop', verify, (req, res) => {
     }
 })
 
-
-router.get('/item/categories', verify, (req, res) => {
-    connection.query(
-        "SELECT * FROM ItemCategory"  ,(err, result) =>{
-            if(err) {
-                console.log(err);
-            } else {
-                res.send(result);
-            }
-        }
-    )
-})
-
 router.post('/shop/add/item', verify, (req, res) => {
-    const { itemname, itemimage, description, price, available_quantity, category, shopname} = req.body;
-    console.log(category);
+    const { itemname, profileImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
+    // console.log("category is ..." + categoryid);
+    // console.log("itemname is ..." + itemname);
+    // console.log("itemimage is ..." + profileImageFileUrl);
     connection.query(
         "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
-        [uuidv4(), itemname, itemimage, description, price, available_quantity, category, shopname],
+        [uuidv4(), itemname, profileImageFileUrl, description, price, available_quantity, categoryid, shopname],
         (error, result) =>{
             if(error) {
                 console.log(error)

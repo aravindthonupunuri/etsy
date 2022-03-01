@@ -70,7 +70,13 @@ export default function ItemComponent(props) {
         <Col sm={2}>
             {homeItem.itemname}
             <br />
-            {homeItem.itemimage}
+            {console.log("item image is.. " + homeItem.itemimage)}
+            <img
+                    className="item-image"
+                    style={{ width: "200px", height: "200px" }}
+                    src={homeItem.itemimage}
+                    alt="alt"
+                />
             <FavoriteIcon
                 style={favStyle}
                 onClick={

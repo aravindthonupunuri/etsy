@@ -120,13 +120,13 @@ export default function Shop() {
         else setErrorMsg("shop name already exits enter a valid shop name");
     }
 
-    function filterItems(name) {
-        console.log("in home filter items" + name);
-        let res = shopItems.filter(
-            shopItem => shopItem.itemname.includes(name)
-        )
-        setFilterShopItems(res)
-    }
+    // function filterItems(name) {
+    //     console.log("in home filter items" + name);
+    //     let res = shopItems.filter(
+    //         shopItem => shopItem.itemname.includes(name)
+    //     )
+    //     setFilterShopItems(res)
+    // }
 
     if (isShop === true) {
         let shopname = shopDetails.shopname
@@ -143,7 +143,7 @@ export default function Shop() {
                 </h2>
                 <p> These are your items.. </p>
                 <p>
-                    <Container>
+                    {/* <Container>
                         <Row>
                             <Col md={2}>
                                 <FormControl onChange={handleEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
@@ -153,7 +153,7 @@ export default function Shop() {
                                 <SearchIcon onClick={() => filterItems(nameToSearch)} />
                             </Col>
                         </Row>
-                    </Container>
+                    </Container> */}
                 </p>
                 <Row>
                     {
