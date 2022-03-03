@@ -47,11 +47,12 @@ export default function Item(props) {
 
     let shopname = props.shopname;
     const [show, setShow] = useState(false);
-    const [{ itemname, itemimage, itemdescription, categoryid }, setState] = useState(
+    const [{ itemname, description, price, available_quantity, categoryid }, setState] = useState(
         {
             itemname: "",
-            itemimage: "",
-            itemdescription: "",
+            description: "",
+            price: "",
+            available_quantity: "",
             categoryid: ""
         }
     )
@@ -60,9 +61,10 @@ export default function Item(props) {
         setState(preState => ({ ...preState, [event.target.name]: event.target.value }))
     }
 
-    const handleClose = () => { setShow(false); 
+    const handleClose = () => {
+        setShow(false);
         props.modalClosed()
-     };
+    };
 
     const handleShow = () => setShow(true);
 
@@ -76,7 +78,10 @@ export default function Item(props) {
                 'auth-token': token
             },
             mode: 'cors',
-            body: JSON.stringify({ itemname, profileImageFileUrl, itemdescription, categoryid, shopname }),
+            body: JSON.stringify({
+                itemname, profileImageFileUrl, description, price, available_quantity,
+                categoryid, shopname
+            }),
         })
         // dispatch()
         handleClose()
@@ -98,27 +103,34 @@ export default function Item(props) {
                     </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Item image : </label></div>
-                        {/* <input onChange={handleEvent} name="itemimage" value={itemimage} className="form-control" id="itemimage" aria-describedby="itemimageHelp" placeholder="Item image" autoFocus required={true} /> */}
                         <input
-                type="file"
-                required
-                className="custom-file-input"
-                name="res_file"
-                accept="image/*"
-                onChange={(e) => {
-                    setProfileImageFile(e.target.files[0]);
-                }}
-            />
-            <button type="submit" 
-            onClick={handleUpload}
-            >
-                Upload
-            </button>
+                            type="file"
+                            required
+                            className="custom-file-input"
+                            name="res_file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                setProfileImageFile(e.target.files[0]);
+                            }}
+                        />
+                        <button type="submit"
+                            onClick={handleUpload}
+                        >
+                            Upload
+                        </button>
                     </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Item Description : </label></div>
-                        <input onChange={handleEvent} name="itemdescription" value={itemdescription} className="form-control" id="itemdescription" aria-describedby="itemdescriptionHelp" placeholder="Item description" autoFocus required={true} />
+                        <input onChange={handleEvent} name="description" value={description} className="form-control" id="description" aria-describedby="descriptionHelp" placeholder="Item description" autoFocus required={true} />
                     </div>
+                    <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
+                        <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Item Price : </label></div>
+                        <input onChange={handleEvent} name="price" value={price} className="form-control" id="price" aria-describedby="priceHelp" placeholder="Item price" autoFocus required={true} />
+                    </div>
+                    <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
+                        <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> available quantity : </label></div>
+                        <input onChange={handleEvent} name="available_quantity" value={available_quantity} className="form-control" id="available_quantity" aria-describedby="available_quantityHelp" placeholder="Available quantity" autoFocus required={true} />
+                    </div>                    
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%', marginBottom: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Category id : </label></div>
                         <input onChange={handleEvent} name="categoryid" value={categoryid} className="form-control" id="categoryid" aria-describedby="categoryidHelp" placeholder="Category id" autoFocus required={true} />

@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Col } from "react-bootstrap";
+import { Button, Card, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import backendServer from '../../webconfig';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Redirect } from 'react-router-dom';
 
 export default function ItemComponent(props) {
     let homeItem = props.item
@@ -19,11 +20,11 @@ export default function ItemComponent(props) {
                 mode: 'cors'
             })
             let favItems = await res.json();
-            for(let i = 0; i < favItems.length; i++) {
-                if(favItems[i].itemId === props.id) {
+            for (let i = 0; i < favItems.length; i++) {
+                if (favItems[i].itemId === props.id) {
                     setIsFav(true);
                     break;
-                } 
+                }
             }
         }, [isFav]
     )
@@ -38,10 +39,10 @@ export default function ItemComponent(props) {
             },
             mode: 'cors',
             body: JSON.stringify({ itemId: props.id }),
-        })  
-        if(res.status) {
+        })
+        if (res.status) {
             setIsFav(true)
-        }      
+        }
     }
 
     let unMarkFav = async () => {
@@ -53,41 +54,42 @@ export default function ItemComponent(props) {
                 'Content-Type': 'application/json'
             },
             mode: 'cors'
-        })  
-        if(res.status) {
-            console.log("fav deleted")
+        })
+        if (res.status) {
+            // console.log("fav deleted")
             setIsFav(false)
-        }      
+        }
     }
 
     let favStyle;
-    if(isFav) {
-        favStyle = {color: 'red'}
+    if (isFav) {
+        favStyle = { color: 'red' }
     }
-    
-    return <div>
 
-        <Col sm={2}>
-            {homeItem.itemname}
-            <br />
-            {console.log("item image is.. " + homeItem.itemimage)}
-            <img
-                    className="item-image"
-                    style={{ width: "200px", height: "200px" }}
-                    src={homeItem.itemimage}
-                    alt="alt"
-                />
-            <FavoriteIcon
-                style={favStyle}
-                onClick={
-                    // () => { console.log("in favorite!") }
-                    !isFav ?
-                    markFav
-                     : 
-                     unMarkFav
+    let redirectToItemDetails = () => {
+        console.log("hi..");
+        return <Redirect to = "/login" />
+    }
+
+    return <Card onClick={redirectToItemDetails} style={{ width: '15rem' }}>
+        <Card.Img variant="top" src={homeItem.itemimage} />
+        <Card.Body>
+            <Card.Title>{homeItem.itemname}</Card.Title>
+            <span>
+                <FavoriteIcon
+                    style={favStyle}
+                    onClick={
+                        !isFav ?
+                            markFav
+                            :
+                            unMarkFav
                     } />
-            <br>
-            </br>
-        </Col>
-    </div>
+            </span>
+
+            <Card.Text>
+                {homeItem.price} $
+            </Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+        </Card.Body>
+    </Card>
 }

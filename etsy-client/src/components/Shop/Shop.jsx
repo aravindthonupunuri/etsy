@@ -33,8 +33,8 @@ export default function Shop() {
             mode: 'cors'
         })
         let shopDetails = await res.json();
-        console.log("shop details length" + shopDetails.length)
-        console.log("getting shop details done")
+        // console.log("shop details length" + shopDetails.length)
+        // console.log("getting shop details done")
         if (shopDetails.length !== 0) {
             // console.log("hii using effect 200..!")
             shopDetails = shopDetails[0];
@@ -83,8 +83,8 @@ export default function Shop() {
             mode: 'cors'
         })
         let result = await res.json();
-        console.log("number of items" + result.length)
-        console.log("doneee get shop items")
+        // console.log("number of items" + result.length)
+        // console.log("doneee get shop items")
         // console.log("huhu " + result[0].itemname);
         setShopItems(result);
         setFilterShopItems(result);
@@ -120,14 +120,6 @@ export default function Shop() {
         else setErrorMsg("shop name already exits enter a valid shop name");
     }
 
-    // function filterItems(name) {
-    //     console.log("in home filter items" + name);
-    //     let res = shopItems.filter(
-    //         shopItem => shopItem.itemname.includes(name)
-    //     )
-    //     setFilterShopItems(res)
-    // }
-
     if (isShop === true) {
         let shopname = shopDetails.shopname
         let username = userDetails.username
@@ -143,27 +135,18 @@ export default function Shop() {
                 </h2>
                 <p> These are your items.. </p>
                 <p>
-                    {/* <Container>
-                        <Row>
-                            <Col md={2}>
-                                <FormControl onChange={handleEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
-
-                            </Col>
-                            <Col>
-                                <SearchIcon onClick={() => filterItems(nameToSearch)} />
-                            </Col>
-                        </Row>
-                    </Container> */}
                 </p>
                 <Row>
                     {
+
                         filtereShopItems.map(
-                            shopItem => {
-                                return <div key={shopItem.id}>
-                                    <ItemComponent key={shopItem.id} id={shopItem.id} item={shopItem} />
-                                    <br /><br /><br />
-                                </div>
-                            }
+                            shopItem => (
+                                <Col sm={2} key={shopItem.id}>
+                                    <React.Fragment>
+                                        <ItemComponent id={shopItem.id} item={shopItem} />
+                                    </React.Fragment>
+                                </Col>
+                            )
                         )
                     }
                 </Row>

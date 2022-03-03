@@ -29,7 +29,7 @@ export default function Home() {
         mode: 'cors'
       })
       let homeItems = await res.json();
-      console.log("items in home" + homeItems.length);
+      // console.log("items in home" + homeItems.length);
       setHomeItems(homeItems)
       filteredHomeItems(homeItems)
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,7 +40,6 @@ export default function Home() {
   // }
   //   );
   function filterItems(name) {
-    console.log("in home filter items" + name);
     let res = homeItems.filter(
       homeItem => homeItem.itemname.includes(name)
     )
@@ -51,16 +50,21 @@ export default function Home() {
     return (
       <div>
         <Appbar filterItems={filterItems} />
-        {console.log("in display items" + filtItems.length)}
+        <br></br>
+        <br></br>
+        <br></br>
         <Row>
-          {            
+          {
             filtItems.map(
               homeItem =>
-              (<React.Fragment key={homeItem.id}>
-                {console.log(homeItem.id)}
-                <ItemComponent id={homeItem.id} item={homeItem} />
-                <br /><br /><br />
-              </React.Fragment>)
+              (
+                <Col sm={2} key={homeItem.id}>
+                  <React.Fragment>
+                    <ItemComponent id={homeItem.id} item={homeItem} />
+                    <br /><br /><br />
+                  </React.Fragment>
+                </Col>
+              )
             )
           }
         </Row>

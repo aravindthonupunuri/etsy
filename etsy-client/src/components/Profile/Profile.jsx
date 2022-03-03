@@ -17,7 +17,7 @@ import ItemComponent from "../ItemComponent/ItemComponent";
 import SearchIcon from '@mui/icons-material/Search';
 
 export default function Profile() {
-    console.log("in profile..");
+    // console.log("in profile..");
 
     const [profileImageFile, setProfileImageFile] = useState(null);
     const [profileImageFileUrl, setProfileImageFileUrl] = useState(noProfileImage);
@@ -34,7 +34,7 @@ export default function Profile() {
 
     useEffect(
         async () => {
-            console.log("in set profile details");
+            // console.log("in set profile details");
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/favourites`, {
                 method: 'GET',
@@ -56,7 +56,7 @@ export default function Profile() {
                     mode: 'cors'
                 })
                 res = await res.json();
-                console.log(res[0])
+                // console.log(res[0])
                 favItems.push(res[0])
             }
             setFavouriteItems(favItems);
@@ -213,40 +213,35 @@ export default function Profile() {
     return <div>
         <Appbar />
         <Container>
-            <span>
-                <img
-                    className="shop-image"
-                    style={{ width: "200px", height: "200px" }}
-                    src={profileImageFileUrl}
-                    alt="alt"
-                />
-            </span>
-            <input
-                type="file"
-                required
-                className="custom-file-input"
-                name="res_file"
-                accept="image/*"
-                onChange={(e) => {
-                    setProfileImageFile(e.target.files[0]);
-                }}
-            />
-            <button type="submit" onClick={handleUpload}>
-                Upload
-            </button>
-            <div>
-                name: {profileDetails.username}
-            </div>
-            <div>
-                email: {profileDetails.emailId}
-            </div>
+            <Row>
+                <Col>
+                    <img
+                        className="shop-image"
+                        style={{ width: "200px", height: "200px" }}
+                        src={profileImageFileUrl}
+                        alt="alt"
+                    />
+                </Col>
+                <Col>
+                    <div>
+                        name: {profileDetails.username}
+                    </div>
+                    <div>
+                        email: {profileDetails.emailId}
+                    </div>
+                    <EditIcon onClick={handleShow} />
+                </Col>
+            </Row>
+
+
         </Container>
-
-
+        <p style={{ fontWeight: "bold", fontSize: 30 }}> These are your favourite items</p>
         <Container>
             <Row>
-                <Col md={2}>
-                    <FormControl onChange={handleFilterEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
+                <Col className="col-6">
+                </Col>
+                <Col >
+                    <input style={{ width: 500 }} onChange={handleFilterEvent} type="search" placeholder="Search" className="mr-2 barsize" aria-label="Search" />
                 </Col>
                 <Col>
                     <SearchIcon onClick={() => filterItems(nameToSearch)} />
@@ -254,15 +249,29 @@ export default function Profile() {
             </Row>
         </Container>
 
-        <div onClick={handleShow}>
-            <EditIcon />
-        </div>
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Enter the details of item you want to add</Modal.Title>
+                <Modal.Title>update the profile details</Modal.Title>
             </Modal.Header>
             <form>
                 <div >
+                    <div>
+                        <input style={{ width: '250px' }}
+                            type="file"
+                            required
+                            className="custom-file-input"
+                            name="res_file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                setProfileImageFile(e.target.files[0]);
+                            }}
+                        />
+                        <span>
+                            <button type="submit" onClick={handleUpload}>
+                                Upload
+                            </button>
+                        </span>
+                    </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Email Id : </label></div>
                         <input
@@ -342,17 +351,17 @@ export default function Profile() {
         </Modal>
         <Container>
             <Row>
-                <Col>
-                    {
-                        filtereProfileItems.map(favouriteItem =>
-                        (<React.Fragment key={favouriteItem.id}>
-                            {console.log(favouriteItem.id)}
-                            <ItemComponent id={favouriteItem.id} item={favouriteItem} />
-                            <br /><br /><br />
-                        </React.Fragment>)
+                {
+                    filtereProfileItems.map(
+                        favouriteItem => (
+                            <Col sm={2} key={favouriteItem.id}>
+                                <React.Fragment>
+                                    <ItemComponent id={favouriteItem.id} item={favouriteItem} />
+                                </React.Fragment>
+                            </Col>
                         )
-                    }
-                </Col>
+                    )
+                }
             </Row>
         </Container>
     </div>
