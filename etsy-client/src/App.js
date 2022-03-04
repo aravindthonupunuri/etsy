@@ -29,10 +29,11 @@ function App() {
         </Route>  
         <Route path="/profile">
           <Profile />
-        <Route path="/item">
+          </Route>            
+        <Route path="/item/:itemId/:shopName">
           <ItemDetails />
         </Route>  
-        </Route>        
+      
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>

@@ -21,25 +21,17 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions))
-// app.use("/api/user", signupRouter);
-
-// app.get("/", function (req, res) {
-//   res.send("I am here");
-// });
-
-// app.listen(3001);
-// console.log("Server Listening on port 3001");
-
-// module.exports = app;
 
 const userRoute = require('./routes/userRoutes');
 const shopRoute = require('./routes/shopRoutes');
 const homeRoute = require('./routes/homeRoutes');
+const cartRoute = require('./routes/cartRoutes');
 
 //Route Middlewares
 app.use('/api/user', userRoute);
 app.use('/api', shopRoute);
 app.use('/api', homeRoute);
+app.use('/api', cartRoute)
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -3,9 +3,10 @@ import { Button, Card, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import backendServer from '../../webconfig';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from "react-router";
 
 export default function ItemComponent(props) {
+    const history = useHistory();
     let homeItem = props.item
     const [isFav, setIsFav] = useState(false);
     useEffect(
@@ -68,7 +69,9 @@ export default function ItemComponent(props) {
 
     let redirectToItemDetails = () => {
         console.log("hi..");
-        return <Redirect to = "/login" />
+        // return <Redirect to = "/login" />
+        console.log("shop name" + " " + homeItem.shopname)
+        history.push(`/item/${homeItem.id}/${homeItem.shopname}`)
     }
 
     return <Card onClick={redirectToItemDetails} style={{ width: '15rem' }}>
