@@ -92,7 +92,7 @@ export default function ItemComponent(props) {
             <Card.Text>
                 {homeItem.price} $
             </Card.Text>
-            <Button variant="primary">Go somewhere</Button>
+            {/* <Button variant="primary">Go somewhere</Button> */}
         </Card.Body>
     </Card>
 }

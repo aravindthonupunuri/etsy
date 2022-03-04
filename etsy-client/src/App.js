@@ -7,6 +7,8 @@ import Login from './components/Login/Login';
 import Shop from './components/Shop/Shop';
 import Profile from './components/Profile/Profile';
 import ItemDetails from './components/ItemDetails/ItemDetails';
+import Cart from './components/Cart/Cart';
+import Orders from './components/Orders/Orders';
 
 function NotFound() {
   return <div>not found man!!</div>;
@@ -33,7 +35,12 @@ function App() {
         <Route path="/item/:itemId/:shopName">
           <ItemDetails />
         </Route>  
-      
+        <Route path="/cart">
+          <Cart />
+        </Route>   
+        <Route path="/orders">
+          <Orders />
+        </Route>               
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>

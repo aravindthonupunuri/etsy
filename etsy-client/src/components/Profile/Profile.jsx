@@ -57,7 +57,7 @@ export default function Profile() {
                 })
                 res = await res.json();
                 // console.log(res[0])
-                favItems.push(res[0])
+                favItems.push(res)
             }
             setFavouriteItems(favItems);
             setFilterProfileItems(favItems);

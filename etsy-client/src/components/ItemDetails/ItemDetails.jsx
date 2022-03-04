@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import backendServer from '../../webconfig';
 import { Button, Col, Container, Row } from "react-bootstrap";
+import Appbar from "../Appbar/Appbar";
 
 export default function ItemDetails(props) {
     const { itemId, shopName } = useParams();
@@ -55,6 +56,7 @@ export default function ItemDetails(props) {
     }   
 
     return <div>
+        <Appbar />        
         in item page
         <Container>
         <Row>

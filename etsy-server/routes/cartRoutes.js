@@ -19,7 +19,7 @@ router.post('/cart/additem', verify, (req, res) => {
     )
 })
 
-router.get('cart/items', verify, (req, res) => {
+router.get('/cart/items', verify, (req, res) => {
     console.log("in get cart items.");
     connection.query(
         "SELECT * FROM Cart where userid = ?", 
@@ -29,7 +29,7 @@ router.get('cart/items', verify, (req, res) => {
                 console.log(error)
                 res.status(400).send(error.message)
             } else {
-                res.status(200).send("fetched items for a user from cart.");
+                res.send(result);
             }
         }
     )    
