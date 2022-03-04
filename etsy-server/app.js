@@ -26,12 +26,14 @@ const userRoute = require('./routes/userRoutes');
 const shopRoute = require('./routes/shopRoutes');
 const homeRoute = require('./routes/homeRoutes');
 const cartRoute = require('./routes/cartRoutes');
+const orderRoute = require('./routes/orderRoutes');
 
 //Route Middlewares
 app.use('/api/user', userRoute);
 app.use('/api', shopRoute);
 app.use('/api', homeRoute);
-app.use('/api', cartRoute)
+app.use('/api', cartRoute);
+app.use('/api', orderRoute);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));

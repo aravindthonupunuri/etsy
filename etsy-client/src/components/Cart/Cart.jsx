@@ -45,8 +45,42 @@ export default function Cart() {
           }, []        
     )
 
-    let redirectToMyPurchases = () => {
-        
+    let redirectToMyPurchases = async () => {
+      let token = sessionStorage.getItem('token');
+      let res = await fetch(`${backendServer}/api/order`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'auth-token': token
+          },
+          mode: 'cors'
+      })
+      res = await res.json()
+      let orderid = res.orderid;
+
+      for(let i = 0; i < cartItems.length; i++) {
+        let orderItem = {
+          orderid: orderid,
+          itemid: cartItems[i].itemid,
+          shopname: cartItems[i].shopname,
+          price: cartItems[i].price,
+          quantity: cartItems[i].quantity
+        }
+        console.log("order item" + orderItem)
+        await fetch(`${backendServer}/api/order/additem`, {
+            method: 'POST',
+            headers: {
+              'auth-token': token,
+              'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify(orderItem)
+          })
+    }
+
+
+
+      // console.log(res);        
         history.push(`/orders`)
     }
 

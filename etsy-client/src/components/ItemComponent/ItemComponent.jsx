@@ -82,10 +82,14 @@ export default function ItemComponent(props) {
                 <FavoriteIcon
                     style={favStyle}
                     onClick={
-                        !isFav ?
-                            markFav
+                        (event) => {                            
+                            !isFav ?
+                            markFav()
                             :
-                            unMarkFav
+                            unMarkFav()
+                            event.stopPropagation()
+                        }
+
                     } />
             </span>
 
