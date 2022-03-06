@@ -40,4 +40,40 @@ router.post('/order/additem', verify, (req, res) => {
     )
 })
 
+router.get('/orders', verify, (req, res) => {
+    // const { quantity } = req.body;
+    // var datetime = new Date();
+    // var orderid = uuidv4();
+    connection.query(
+        "Select * from Orders where userid = ?",
+        [req.user.id],
+        (error, result) =>{
+            if(error) {
+                console.log(error)
+                res.status(400).send(error.message)
+            } else {
+                console.log("retrived all orders for user")
+                res.status(200).send(result);
+            }
+        }
+    )
+})
+
+router.get('/orders/:orderid', verify, (req, res) => {
+    const {orderid} = req.params;
+    connection.query(
+        "Select * from OrderItems where orderid = ?",
+        [orderid],
+        (error, result) =>{
+            if(error) {
+                console.log(error)
+                res.status(400).send(error.message)
+            } else {
+                console.log("retrived all orders items for orderif")
+                res.status(200).send(result);
+            }
+        }
+    )
+})
+
 module.exports = router;

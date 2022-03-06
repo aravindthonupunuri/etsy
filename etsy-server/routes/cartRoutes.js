@@ -35,4 +35,19 @@ router.get('/cart/items', verify, (req, res) => {
     )    
 })
 
+router.delete("/cart/:cartId", verify, (req, res) => {
+    const {cartId} = req.params;
+    // console.log("in delete fav" + itemId)
+    connection.query(
+      "DELETE FROM Cart where id = ?", [cartId],
+      (err, result) => {
+          if(err){
+            res.status(400).send(err.message);
+          } else {
+              res.status(200).send(result);
+          }
+      }
+  )  
+  })
+
 module.exports = router;

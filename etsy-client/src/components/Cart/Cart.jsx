@@ -57,14 +57,15 @@ export default function Cart() {
       })
       res = await res.json()
       let orderid = res.orderid;
-
+console.log(cartItems)
       for(let i = 0; i < cartItems.length; i++) {
+        console.log("cart item" + cartItems[i]);
         let orderItem = {
           orderid: orderid,
-          itemid: cartItems[i].itemid,
+          itemid: cartItems[i].id,
           shopname: cartItems[i].shopname,
           price: cartItems[i].price,
-          quantity: cartItems[i].quantity
+          quantity: 0
         }
         console.log("order item" + orderItem)
         await fetch(`${backendServer}/api/order/additem`, {
@@ -75,9 +76,19 @@ export default function Cart() {
             },
             mode: 'cors',
             body: JSON.stringify(orderItem)
-          })
+          })     
     }
 
+    await fetch(`${backendServer}/api/cart/additem`, {
+      method: 'DELETE',
+      headers: {
+        'auth-token': token,
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify(orderItem)
+    }) 
+    
 
 
       // console.log(res);        
