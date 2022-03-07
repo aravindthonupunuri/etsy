@@ -48,7 +48,7 @@ function SignUp() {
       <div style={{ textAlign: 'center', marginTop: '17%' }}>
 
         <form onSubmit={handleSubmit}>
-          <div ><img style={{ width: '85%' }} src={logo} alt="Uber Eats" /></div>
+          <div ><img style={{ width: '85%' }} src={logo} alt="Etsy" /></div>
           <div >
             <div style={{ marginTop: '3%' }}>
               <h3>Please register here</h3>

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Container, FormControl, Row } from 'react-bootstrap';
+import { Col, Container, Form, FormControl, Row } from 'react-bootstrap';
 import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import Item from '../Item/Item';
 import ItemComponent from '../ItemComponent/ItemComponent';
 import EditIcon from '@mui/icons-material/Edit';
+import noshopimage from '../../images/noshopimage.jpeg';
+import getFirebaseImage from "../../Helper/getFirebaseImage";
 
 require('./Shop.css');
 
 export default function Shop() {
+    const [shopimage, setShopImage] = useState(noshopimage);
+    const [salescount, setSalescount] = useState(0);
+    const [shopImageURL, setShopImageURL] = useState(null);
     const [nameOfShop, setShopName] = useState("");
     const [shopItems, setShopItems] = useState([]);
     const [filtereShopItems, setFilterShopItems] = useState([]);
@@ -16,10 +21,6 @@ export default function Shop() {
     const [userDetails, setUserDetails] = useState({});
     const [isShop, setShop] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
-    const [nameToSearch, setNameToSearch] = useState("");
-    const handleEvent = (e) => {
-        setNameToSearch(e.target.value);
-    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
@@ -33,10 +34,7 @@ export default function Shop() {
             mode: 'cors'
         })
         let shopDetails = await res.json();
-        // console.log("shop details length" + shopDetails.length)
-        // console.log("getting shop details done")
         if (shopDetails.length !== 0) {
-            // console.log("hii using effect 200..!")
             shopDetails = shopDetails[0];
             setShopDetails(shopDetails);
             setShop(true);
@@ -83,9 +81,6 @@ export default function Shop() {
             mode: 'cors'
         })
         let result = await res.json();
-        // console.log("number of items" + result.length)
-        // console.log("doneee get shop items")
-        // console.log("huhu " + result[0].itemname);
         setShopItems(result);
         setFilterShopItems(result);
     }
@@ -99,9 +94,11 @@ export default function Shop() {
 
 
     const checkAndCreateShop = async () => {
+        let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
         const obj = {
             shopname: nameOfShop,
-            shopimage: "image"
+            shopimage: downloadURL,
+            salescount: salescount
         }
         const token = sessionStorage.getItem('token');
         let res = await fetch(`${backendServer}/api/upload/shop`, {
@@ -120,6 +117,34 @@ export default function Shop() {
         else setErrorMsg("shop name already exits enter a valid shop name");
     }
 
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        let token = sessionStorage.getItem('token');
+        let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
+        // setShopImageURL(downloadURL);
+        let res = await fetch(`${backendServer}/api/shop/uploadImage`, {
+            method: 'PUT',
+            headers: {
+                'auth-token': token,
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify({shopname: shopDetails.shopname, shopimage: downloadURL}),
+        })
+        if (res.status === 200) {
+            console.log("updated image")
+            // setShop(true);
+            // setState(preState => ({ ...preState, [event.target.name]: event.target.value }))
+            setShopDetails(
+                preState => ({
+                    ...preState, 
+                    shopname: shopDetails.shopname,
+                    shopimage: downloadURL
+                })
+                )
+        }
+    }
+
     if (isShop === true) {
         let shopname = shopDetails.shopname
         let username = userDetails.username
@@ -127,34 +152,47 @@ export default function Shop() {
         return <div>
             <Appbar />
             <div>
-                <h1>
-                    Welcome {username}
-                </h1>
-                <h2>
-                    This is your shop name {shopname}
-                </h2>
+                <img
+                    style={{ width: "200px", height: "200px" }}
+                    src={shopDetails.shopimage}
+                    alt="alt"
+                />
+                        <input
+                            type="file"
+                            required
+                            className="custom-file-input"
+                            name="res_file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                setShopImage(e.target.files[0]);
+                            }}
+                        />
+                        <button type="submit"
+                            onClick={handleUpload}
+                        >
+                            Upload
+                        </button>
+                        <div> sales count is {salescount} </div>
+                <h1> Welcome {username} </h1>
+                <img src={userDetails.profilePicture} style={{ width: "200px", height: "200px" }} alt="alt"/>
+                <h2> This is your shop name {shopname} </h2>
                 <p> These are your items.. </p>
                 <p>
                 </p>
                 <Row>
-                    {
-
-                        filtereShopItems.map(
-                            shopItem => (
-                                <div>
-                                    <Col sm={2} key={shopItem.id}>
-                                        <React.Fragment>
-                                            <ItemComponent id={shopItem.id} item={shopItem} />
-                                        </React.Fragment>
-                                    </Col>
-                                    <Col>
+                    {filtereShopItems.map(
+                        shopItem => (
+                            <div>
+                                <Col sm={2} key={shopItem.id}>
+                                    <React.Fragment>
+                                        <ItemComponent id={shopItem.id} item={shopItem} />
+                                    </React.Fragment>
+                                </Col>
+                                <Col>
                                     <EditIcon></EditIcon>
-                                    </Col>
-                                </div>
-
-                            )
-                        )
-                    }
+                                </Col>
+                            </div>)
+                    )}
                 </Row>
                 <Item shopname={shopname} modalClosed={modalClosed} />
             </div>

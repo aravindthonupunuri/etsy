@@ -92,7 +92,6 @@ export default function Profile() {
             <Row>
                 <Col>
                     <img
-                        className="shop-image"
                         style={{ width: "200px", height: "200px" }}
                         src={profileDetails.profilePicture}
                         alt="alt"

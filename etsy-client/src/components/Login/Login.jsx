@@ -59,7 +59,7 @@ const Login = () => {
           <div style={{ textAlign: 'center', marginTop: '17%' }}>
 
             <form onSubmit={checkLogin}>
-              <div ><img style={{ width: '85%' }} src={logo} alt="Uber Eats" /></div>
+              <div ><img style={{ width: '85%' }} src={logo} alt="Etsy" /></div>
               <div >
                 <div style={{ marginTop: '3%' }}>
                   <h1 style={{ fontSize: 20 }}> Welcome to </h1>

@@ -8,14 +8,7 @@ import {
     Button,
 } from "react-bootstrap";
 import backendServer from '../../webconfig';
-import {
-    getStorage,
-    ref,
-    uploadBytesResumable,
-    getDownloadURL
-} from "firebase/storage";
 import noProfileImage from "../../images/noprofileimage.png";
-import firebaseApp from "../../firebaseConfig";
 import Appbar from "../Appbar/Appbar";
 import { useHistory } from "react-router-dom";
 import getFirebaseImage from "../../Helper/getFirebaseImage";

@@ -3,13 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import backendServer from '../../webconfig';
 import noItemImage from "../../images/noitemimage.jpeg";
-import {
-    getStorage,
-    ref,
-    uploadBytesResumable,
-    getDownloadURL
-} from "firebase/storage";
-import firebaseApp from "../../firebaseConfig";
+import getFirebaseImage from "../../Helper/getFirebaseImage";
 
 export default function Item(props) {
     const dispatch = useDispatch();
@@ -19,31 +13,10 @@ export default function Item(props) {
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        const storage = getStorage(firebaseApp);
-        const imagesRef = ref(storage, `/images/${props.shopname}/${itemImageFile.name}`);
-
-        const uploadTask = uploadBytesResumable(imagesRef, itemImageFile);
-
-        // Listen for state changes, errors, and completion of the upload.
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
-            },
-            (error) => {
-                console.log(error.code);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    const token = sessionStorage.getItem("token");
-                    console.log("File available at", downloadURL);
-                    setItemImageFileUrl(downloadURL);
-                });
-            }
-        );
+        let downloadURL = await getFirebaseImage(itemImageFile, `/images/${props.shopname}`)
+        setItemImageFileUrl(downloadURL);
     }
+
 
     let shopname = props.shopname;
     const [show, setShow] = useState(false);
@@ -130,7 +103,7 @@ export default function Item(props) {
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> available quantity : </label></div>
                         <input onChange={handleEvent} name="available_quantity" value={available_quantity} className="form-control" id="available_quantity" aria-describedby="available_quantityHelp" placeholder="Available quantity" autoFocus required={true} />
-                    </div>                    
+                    </div>
                     <div className="form-group" style={{ marginTop: '5%', marginLeft: '5%', marginRight: '5%', marginBottom: '5%' }}>
                         <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label> Category id : </label></div>
                         <input onChange={handleEvent} name="categoryid" value={categoryid} className="form-control" id="categoryid" aria-describedby="categoryidHelp" placeholder="Category id" autoFocus required={true} />

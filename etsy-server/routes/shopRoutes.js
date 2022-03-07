@@ -33,7 +33,7 @@ getShops = () => {
 
 
 router.post('/upload/shop', verify, (req, res) => {
-    const {shopname, shopimage} = req.body;
+    const {shopname, shopimage, salescount} = req.body;
     console.log(req.user);
 
     try {
@@ -46,7 +46,7 @@ router.post('/upload/shop', verify, (req, res) => {
             {
                 connection.query(
                     "INSERT INTO Shop (shopname, shopimage, shopownerId, salescount) values (?,?,?,?)",
-                    [shopname, shopimage, req.user.id, 0],
+                    [shopname, shopimage, req.user.id, salescount],
                     (error, results) =>{
                         if(error) {
                             console.log(error);
@@ -123,17 +123,17 @@ router.get('/shop/items/:shopname', verify, (req, res) => {
 })
 
 router.put("/shop/uploadImage", verify, (req, res) => {
-    const { name, image } = req.body;
+    const { shopname, shopimage } = req.body;
   
     connection.query(
       "UPDATE Shop SET shopimage = ? where shopname = ?",
-      [image, name],
+      [shopimage, shopname],
       (error, result) => {
         if (error) {
           console.log(error);
           res.status(400).send(error.message);
         } else {
-          console.log(result);
+          console.log("uploaded image" + result);
           res.status(200).send("Image uploaded");
         }
       }
