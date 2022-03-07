@@ -71,11 +71,11 @@ router.get('/profile', verify, (req, res) => {
 })
 
 router.put('/update/profile', verify, (req, res) => {
-   const {emailId, username, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
+   const {emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
    console.log(req.user.id);
-   let sql = "UPDATE User SET emailId = ?, username = ?, phonenumber = ?, gender = ?, city = ?, country = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
+   let sql = "UPDATE User SET emailId = ?, username = ?, profilePicture = ?, phonenumber = ?, gender = ?, city = ?, country = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
    connection.query(
-    sql, [emailId, username, phonenumber, gender, city, country, dateofbirth, address, about, req.user.id],
+    sql, [emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about, req.user.id],
     (err, result) =>{
         if(err){
           res.status(400).send(error.message);

@@ -71,13 +71,13 @@ router.post('/upload/shop', verify, (req, res) => {
 })
 
 router.post('/shop/add/item', verify, (req, res) => {
-    const { itemname, profileImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
+    const { itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
     // console.log("category is ..." + categoryid);
     // console.log("itemname is ..." + itemname);
-    // console.log("itemimage is ..." + profileImageFileUrl);
+    console.log("itemimage is ..." + itemImageFileUrl);
     connection.query(
         "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
-        [uuidv4(), itemname, profileImageFileUrl, description, price, available_quantity, categoryid, shopname],
+        [uuidv4(), itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname],
         (error, result) =>{
             if(error) {
                 console.log(error)
