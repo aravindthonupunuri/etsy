@@ -31,10 +31,18 @@ export default function Appbar(props) {
           <Nav.Link onClick={
             () => hist.replace("/")
           }>Home</Nav.Link>
-          <Nav.Link >Favorites</Nav.Link>
-          <Nav.Link href="/shop"> Shop </Nav.Link>
-          <Nav.Link href='/profile'>Profile</Nav.Link>
-          <Nav.Link href='/cart'>Cart</Nav.Link>
+          <Nav.Link onClick={
+            () => hist.replace("/profile")
+          }>Favorites</Nav.Link>
+          <Nav.Link onClick={
+            () => hist.replace("/shop")
+          }> Shop </Nav.Link>
+          <Nav.Link onClick={
+            () => hist.replace("/profile")
+          }>Profile</Nav.Link>
+          <Nav.Link onClick={
+            () => hist.replace("/cart")
+          }>Cart</Nav.Link>
           <Nav.Link onClick={
             () => hist.replace("/orders")
           }>Orders</Nav.Link>

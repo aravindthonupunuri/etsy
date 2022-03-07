@@ -61,7 +61,7 @@ export default function ItemDetails(props) {
         <Container>
         <Row>
             <Col>
-                <img src={item.itemimage} alt="alt" />
+                <img src={item.itemimage} alt="alt" style={{ width: '40rem' }} />
             </Col>
             <Col>
                 <p>

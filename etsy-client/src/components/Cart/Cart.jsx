@@ -79,14 +79,14 @@ console.log(cartItems)
           })     
     }
 
-    await fetch(`${backendServer}/api/cart/additem`, {
+    await fetch(`${backendServer}/api/cart`, {
       method: 'DELETE',
       headers: {
         'auth-token': token,
         'Content-Type': 'application/json'
       },
       mode: 'cors',
-      body: JSON.stringify(orderItem)
+      // body: JSON.stringify(orderItem)
     }) 
     
 

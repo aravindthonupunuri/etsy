@@ -9,6 +9,7 @@ import Profile from './components/Profile/Profile';
 import ItemDetails from './components/ItemDetails/ItemDetails';
 import Cart from './components/Cart/Cart';
 import Orders from './components/Orders/Orders';
+import UpdateProfile from './components/UpdateProfile/UpdateProfile';
 
 function NotFound() {
   return <div>not found man!!</div>;
@@ -40,6 +41,9 @@ function App() {
         </Route>   
         <Route path="/orders">
           <Orders />
+        </Route>     
+        <Route path="/updateprofile">
+          <UpdateProfile />
         </Route>               
         <Route path="*" component={NotFound} />
       </Switch>
@@ -48,3 +52,13 @@ function App() {
 }
 
 export default App;
+
+
+// SET SQL_SAFE_UPDATES = 0;
+// DELETE FROM EtsyDb.Favourites;
+// DELETE FROM EtsyDb.Items;
+// DELETE FROM EtsyDb.OrderItems;
+// DELETE FROM EtsyDb.Orders;
+// DELETE FROM EtsyDb.Shop;
+// DELETE FROM EtsyDb.Cart;
+// DELETE FROM EtsyDb.User;

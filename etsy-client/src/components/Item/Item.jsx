@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import backendServer from '../../webconfig';
-import noProfileImage from "../../images/noprofileimage.png";
+import noItemImage from "../../images/noitemimage.jpeg";
 import {
     getStorage,
     ref,
@@ -14,15 +14,15 @@ import firebaseApp from "../../firebaseConfig";
 export default function Item(props) {
     const dispatch = useDispatch();
 
-    const [profileImageFile, setProfileImageFile] = useState(null);
-    const [profileImageFileUrl, setProfileImageFileUrl] = useState("noProfileImage");
+    const [itemImageFile, setItemImageFile] = useState(noItemImage);
+    const [itemImageFileUrl, setItemImageFileUrl] = useState(noItemImage);
 
     const handleUpload = async (e) => {
         e.preventDefault();
         const storage = getStorage(firebaseApp);
-        const imagesRef = ref(storage, "images");
+        const imagesRef = ref(storage, `/images/${props.shopname}/${itemImageFile.name}`);
 
-        const uploadTask = uploadBytesResumable(imagesRef, profileImageFile);
+        const uploadTask = uploadBytesResumable(imagesRef, itemImageFile);
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.on(
@@ -39,7 +39,7 @@ export default function Item(props) {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     const token = sessionStorage.getItem("token");
                     console.log("File available at", downloadURL);
-                    setProfileImageFileUrl(downloadURL);
+                    setItemImageFileUrl(downloadURL);
                 });
             }
         );
@@ -70,7 +70,7 @@ export default function Item(props) {
 
     async function addItem() {
         let token = sessionStorage.getItem('token');
-        console.log("image adding is " + profileImageFileUrl);
+        console.log("image adding is " + itemImageFileUrl);
         await fetch(`${backendServer}/api/shop/add/item`, {
             method: 'POST',
             headers: {
@@ -79,7 +79,7 @@ export default function Item(props) {
             },
             mode: 'cors',
             body: JSON.stringify({
-                itemname, profileImageFileUrl, description, price, available_quantity,
+                itemname, itemImageFileUrl, description, price, available_quantity,
                 categoryid, shopname
             }),
         })
@@ -110,7 +110,7 @@ export default function Item(props) {
                             name="res_file"
                             accept="image/*"
                             onChange={(e) => {
-                                setProfileImageFile(e.target.files[0]);
+                                setItemImageFile(e.target.files[0]);
                             }}
                         />
                         <button type="submit"

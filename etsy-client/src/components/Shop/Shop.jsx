@@ -4,7 +4,7 @@ import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import Item from '../Item/Item';
 import ItemComponent from '../ItemComponent/ItemComponent';
-import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
 
 require('./Shop.css');
 
@@ -141,11 +141,17 @@ export default function Shop() {
 
                         filtereShopItems.map(
                             shopItem => (
-                                <Col sm={2} key={shopItem.id}>
-                                    <React.Fragment>
-                                        <ItemComponent id={shopItem.id} item={shopItem} />
-                                    </React.Fragment>
-                                </Col>
+                                <div>
+                                    <Col sm={2} key={shopItem.id}>
+                                        <React.Fragment>
+                                            <ItemComponent id={shopItem.id} item={shopItem} />
+                                        </React.Fragment>
+                                    </Col>
+                                    <Col>
+                                    <EditIcon></EditIcon>
+                                    </Col>
+                                </div>
+
                             )
                         )
                     }
