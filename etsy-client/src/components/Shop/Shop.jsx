@@ -3,8 +3,8 @@ import { Col, Container, Form, FormControl, Row } from 'react-bootstrap';
 import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import Item from '../Item/Item';
+import UpdateItem from '../Item/UpdateItem';
 import ItemComponent from '../ItemComponent/ItemComponent';
-import EditIcon from '@mui/icons-material/Edit';
 import noshopimage from '../../images/noshopimage.jpeg';
 import getFirebaseImage from "../../Helper/getFirebaseImage";
 
@@ -13,10 +13,8 @@ require('./Shop.css');
 export default function Shop() {
     const [shopimage, setShopImage] = useState(noshopimage);
     const [salescount, setSalescount] = useState(0);
-    const [shopImageURL, setShopImageURL] = useState(null);
     const [nameOfShop, setShopName] = useState("");
     const [shopItems, setShopItems] = useState([]);
-    const [filtereShopItems, setFilterShopItems] = useState([]);
     const [shopDetails, setShopDetails] = useState({});
     const [userDetails, setUserDetails] = useState({});
     const [isShop, setShop] = useState(null);
@@ -82,7 +80,6 @@ export default function Shop() {
         })
         let result = await res.json();
         setShopItems(result);
-        setFilterShopItems(result);
     }
 
     useEffect(
@@ -121,7 +118,6 @@ export default function Shop() {
         e.preventDefault();
         let token = sessionStorage.getItem('token');
         let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
-        // setShopImageURL(downloadURL);
         let res = await fetch(`${backendServer}/api/shop/uploadImage`, {
             method: 'PUT',
             headers: {
@@ -129,19 +125,17 @@ export default function Shop() {
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
-            body: JSON.stringify({shopname: shopDetails.shopname, shopimage: downloadURL}),
+            body: JSON.stringify({ shopname: shopDetails.shopname, shopimage: downloadURL }),
         })
         if (res.status === 200) {
             console.log("updated image")
-            // setShop(true);
-            // setState(preState => ({ ...preState, [event.target.name]: event.target.value }))
             setShopDetails(
                 preState => ({
-                    ...preState, 
+                    ...preState,
                     shopname: shopDetails.shopname,
                     shopimage: downloadURL
                 })
-                )
+            )
         }
     }
 
@@ -152,49 +146,74 @@ export default function Shop() {
         return <div>
             <Appbar />
             <div>
-                <img
-                    style={{ width: "200px", height: "200px" }}
-                    src={shopDetails.shopimage}
-                    alt="alt"
-                />
-                        <input
-                            type="file"
-                            required
-                            className="custom-file-input"
-                            name="res_file"
-                            accept="image/*"
-                            onChange={(e) => {
-                                setShopImage(e.target.files[0]);
-                            }}
-                        />
-                        <button type="submit"
-                            onClick={handleUpload}
-                        >
-                            Upload
-                        </button>
-                        <div> sales count is {salescount} </div>
-                <h1> Welcome {username} </h1>
-                <img src={userDetails.profilePicture} style={{ width: "200px", height: "200px" }} alt="alt"/>
-                <h2> This is your shop name {shopname} </h2>
-                <p> These are your items.. </p>
-                <p>
-                </p>
-                <Row>
-                    {filtereShopItems.map(
-                        shopItem => (
-                            <div>
-                                <Col sm={2} key={shopItem.id}>
+                <Container>
+                    <br></br>
+                    <Row>
+                        <Col sm={2}>
+                            <img
+                                style={{ width: "200px", height: "200px" }}
+                                src={shopDetails.shopimage}
+                                alt="alt"
+                            />
+                        </Col>
+                        <Col sm={8}>
+                            <Row>
+                                <h2> {shopname} </h2>
+                            </Row>
+                            <Row>
+                                {salescount} sales
+                            </Row>
+                            <Row>
+                                <input
+                                    type="file"
+                                    required
+                                    className="custom-file-input"
+                                    name="res_file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        setShopImage(e.target.files[0]);
+                                    }}
+                                />
+                            </Row>
+                            <br></br>
+                            <Row>
+                                <button type="submit" style={{ width: '100px' }}
+                                    onClick={handleUpload}
+                                >
+                                    Upload
+                                </button>
+                            </Row>
+                        </Col>
+                        <Col sm={2}>
+                            <h5> Shop Owner </h5> <br></br>
+                            <img src={userDetails.profilePicture} style={{ width: "100px", height: "100px" }} alt="alt" /> <br></br>
+                            <h5>{username}</h5>
+                        </Col>
+                    </Row>
+                </Container>
+
+                <Container>
+                    <br></br>
+                    <h4> Items </h4>
+                    <br></br>
+                    <Item shopname={shopname} modalClosed={modalClosed} />
+                    <br></br>
+                    <Row>
+                        {shopItems.map(
+                            shopItem => (
+                                <Col sm={4} key={shopItem.id}>
                                     <React.Fragment>
-                                        <ItemComponent id={shopItem.id} item={shopItem} />
+                                        <div style={{display: 'flex'}}>
+                                            <ItemComponent id={shopItem.id} item={shopItem} />
+                                            <UpdateItem item={shopItem} modalClosed={modalClosed} />
+                                        </div>
                                     </React.Fragment>
                                 </Col>
-                                <Col>
-                                    <EditIcon></EditIcon>
-                                </Col>
-                            </div>)
-                    )}
-                </Row>
-                <Item shopname={shopname} modalClosed={modalClosed} />
+                            )
+                        )}
+                    </Row>
+                    <br></br>
+                </Container>
             </div>
         </div>
     }
@@ -203,7 +222,7 @@ export default function Shop() {
             <Appbar />
             <div>
                 <FormControl onChange={(e) => { setShopName(e.target.value) }}
-                    style={{ width: "300px", marginTop: "100px", left: 0, marginLeft: "100px" }}
+                    style={{ width: "300px", marginTop: "100px", left: 0, marginLeft: "400px" }}
                     type="search" placeholder="Enter Shop Name" className="mr-2 barsize" aria-label="Search" />
                 <div className="text-danger" style={{ marginLeft: "400px" }}>
                     {errorMsg !== "" ? <h5>{errorMsg}</h5> : null}

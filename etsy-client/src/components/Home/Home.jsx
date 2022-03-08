@@ -7,7 +7,7 @@ import backendServer from '../../webconfig';
 // import { useDispatch } from "react-redux";
 import setHomeReduxFromDb from "../../actions/homeAction";
 import ItemComponent from '../ItemComponent/ItemComponent';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 require("./Home.css")
 
 export default function Home() {
@@ -53,21 +53,24 @@ export default function Home() {
         <br></br>
         <br></br>
         <br></br>
-        <Row>
-          {
-            filtItems.map(
-              homeItem =>
-              (
-                <Col sm={2} key={homeItem.id}>
-                  <React.Fragment>
-                    <ItemComponent id={homeItem.id} item={homeItem} />
-                    <br /><br /><br />
-                  </React.Fragment>
-                </Col>
+        <Container>
+          <Row>
+            {
+              filtItems.map(
+                homeItem =>
+                (
+                  <Col sm={3} key={homeItem.id}>
+                    <React.Fragment>
+                      <ItemComponent id={homeItem.id} item={homeItem} />
+                      <br /><br /><br />
+                    </React.Fragment>
+                  </Col>
+                )
               )
-            )
-          }
-        </Row>
+            }
+          </Row>
+        </Container>
+
       </div >
     );
 }

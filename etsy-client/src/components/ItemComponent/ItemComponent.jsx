@@ -57,7 +57,6 @@ export default function ItemComponent(props) {
             mode: 'cors'
         })
         if (res.status) {
-            // console.log("fav deleted")
             setIsFav(false)
         }
     }
@@ -69,13 +68,16 @@ export default function ItemComponent(props) {
 
     let redirectToItemDetails = () => {
         console.log("hi..");
-        // return <Redirect to = "/login" />
-        console.log("shop name" + " " + homeItem.shopname)
-        history.push(`/item/${homeItem.id}/${homeItem.shopname}`)
+        history.push({
+            pathname: `/item/${homeItem.id}/${homeItem.shopname}`,
+            state: {
+                item: homeItem
+            } 
+        })
     }
 
-    return <Card onClick={redirectToItemDetails} style={{ width: '15rem' }}>
-        <Card.Img variant="top" src={homeItem.itemimage} />
+    return <Card onClick={redirectToItemDetails} style={{ width: '300px' }}>
+        <Card.Img variant="top" src={homeItem.itemimage} style = {{width: '300px', height: '150px'}}/>
         <Card.Body>
             <Card.Title>{homeItem.itemname}</Card.Title>
             <span>
@@ -92,11 +94,9 @@ export default function ItemComponent(props) {
 
                     } />
             </span>
-
             <Card.Text>
                 {homeItem.price} $
             </Card.Text>
-            {/* <Button variant="primary">Go somewhere</Button> */}
         </Card.Body>
     </Card>
 }

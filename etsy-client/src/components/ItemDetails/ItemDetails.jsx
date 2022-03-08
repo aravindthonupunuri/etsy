@@ -2,36 +2,43 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import backendServer from '../../webconfig';
 import { Button, Col, Container, Row } from "react-bootstrap";
+import { useLocation } from 'react-router-dom';
 import Appbar from "../Appbar/Appbar";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function ItemDetails(props) {
+    const hist = useHistory();
     const { itemId, shopName } = useParams();
+    const location = useLocation();
+    const itemDetails = location.state.item;
+    // console.log(location.state.item)
     let [item, setItem] = useState({
-        id: "",
-        itemname: "",
-        itemimage: "",
-        description: "",
-        price: "",
-        available_quantity: "",
-        category: "",
+        id: itemDetails.id,
+        itemname: itemDetails.itemname,
+        itemimage: itemDetails.itemimage,
+        description: itemDetails.description,
+        price: itemDetails.price,
+        available_quantity: itemDetails.available_quantity,
+        category: itemDetails.category,
 
     });
     let token = sessionStorage.getItem('token');
-    useEffect(
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        async () => {
-            let res = await fetch(`${backendServer}/api/item/${itemId}`, {
-                method: 'GET',
-                headers: {
-                    'auth-token': token,
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            })
-            let item = await res.json();
-            // console.log("items in home" + homeItems.length);
-            setItem(item)
-        }, [])
+    // useEffect(
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     async () => {
+    //         let res = await fetch(`${backendServer}/api/item/${itemId}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'auth-token': token,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             mode: 'cors'
+    //         })
+    //         let item = await res.json();
+    //         // console.log("items in home" + homeItems.length);
+    //         setItem(item)
+    //     }, [])
 
 
     let addToCart = async () => {
@@ -65,9 +72,9 @@ export default function ItemDetails(props) {
             </Col>
             <Col>
                 <p>
-                    <a href="">
-                        {shopName}
-                    </a>
+                    <Link to = {`/shop/${shopName}`}>
+                    {shopName}
+                    </Link>
                 </p>
                 <p>
                     {item.itemname}

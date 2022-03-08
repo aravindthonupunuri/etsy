@@ -10,6 +10,7 @@ import ItemDetails from './components/ItemDetails/ItemDetails';
 import Cart from './components/Cart/Cart';
 import Orders from './components/Orders/Orders';
 import UpdateProfile from './components/UpdateProfile/UpdateProfile';
+import ShopComponent from './components/ShopComponent/ShopComponent';
 
 function NotFound() {
   return <div>not found man!!</div>;
@@ -27,12 +28,15 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>  
-        <Route path="/shop">
+        <Route exact path="/shop">
           <Shop />
         </Route>  
         <Route path="/profile">
           <Profile />
-          </Route>            
+          </Route> 
+        <Route exact path="/shop/:shopName">
+          <ShopComponent />
+        </Route>                       
         <Route path="/item/:itemId/:shopName">
           <ItemDetails />
         </Route>  

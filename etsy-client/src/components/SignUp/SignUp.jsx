@@ -15,27 +15,32 @@ function SignUp() {
     password: ""
   })
 
+  const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(`${name} ${emailId} ${password}`);
-    const customer = {
-      emailId: emailId,
-      name: name,
-      password: password
-    };
-    let res = await fetch(`${backendServer}/api/user/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors',
-      body: JSON.stringify(customer),
-    })
-    if (res.status === 200) {
-      history.replace("/login");
-    }
+    if (!regex.test(emailId)) { setErrorMsg("Enter valid email id") }
     else {
-      setErrorMsg("please enter valid credentials for registration")
+      const customer = {
+        emailId: emailId,
+        name: name,
+        password: password
+      };
+      let res = await fetch(`${backendServer}/api/user/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify(customer),
+      })
+      if (res.status === 200) {
+        history.replace("/login");
+      }
+      else {
+        setErrorMsg("please enter valid credentials for registration")
+      }
     }
   };
 

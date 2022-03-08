@@ -17,6 +17,39 @@ router.get('/shop', verify, async (req, res) => {
     }
 })
 
+router.get('/shop/:shopName', verify, async (req, res) => {
+    console.log(req.user);
+    const {shopName} = req.params;
+    console.log("in get shops shopName " + shopName);
+    try {
+        let results = await getShops();
+        console.log(results)
+        let result = results.filter(
+            res => res.shopname == shopName
+        )
+        console.log(result)
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+})
+
+router.get('/shopOwnerProfile/:shopOwnerId', verify, async (req, res) => {
+    console.log(req.user);
+    const {shopOwnerId} = req.params;
+    console.log("in get shops shopName " + shopOwnerId);
+    connection.query(
+        "SELECT * from User user where user.id = ?", [shopOwnerId],
+        (err, result) => {
+            if(err){
+              res.status(400).send(error.message);
+            } else {
+                res.status(200).send(result);
+            }
+        }
+    )
+})
+
 getShops = () => {
     return new Promise((resolve, reject) => {
         connection.query(
@@ -91,17 +124,18 @@ router.post('/shop/add/item', verify, (req, res) => {
 
 
 router.put('/shop/update/item', verify, (req, res) => {
-    const { id, itemname, description, price, available_quantity} = req.body;
+    const { id, itemname, itemImageFileUrl, description, price, available_quantity, category} = req.body;
 
-    let sql = "UPDATE Items SET itemname = ?, description = ?, price = ?, available_quantity = ? where id = ?";
+    let sql = "UPDATE Items SET itemname = ?, itemimage = ?, description = ?, price = ?, category = ?, available_quantity = ? where id = ?";
 
     connection.query(
-        sql, [itemname, description, price, available_quantity, id],
+        sql, [itemname, itemImageFileUrl, description, price, available_quantity, category, id],
         (error, result) =>{
             if(error) {
                 console.log(error)
                 res.status(400).send(error.message)
             } else {
+                console.log("updated item.")
                 res.status(200).send("Item updated");
             }
         }

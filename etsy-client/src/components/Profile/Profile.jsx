@@ -13,7 +13,7 @@ export default function Profile() {
     const hist = useHistory();
     const [filtereProfileItems, setFilterProfileItems] = useState([]);
 
-    const [profileDetails, setProfileDetails] = useState([]);
+    const [profileDetails, setProfileDetails] = useState({});
     const [favouriteItems, setFavouriteItems] = useState([]);
 
     const [nameToSearch, setNameToSearch] = useState("");
@@ -87,16 +87,18 @@ export default function Profile() {
 
     return <div>
         <Appbar />
+        <br></br>
         {console.log("profile image " + profileDetails.profilePicture)}
         <Container>
             <Row>
-                <Col>
+                <Col sm = {3}>
                     <img
                         style={{ width: "200px", height: "200px" }}
                         src={profileDetails.profilePicture}
                         alt="alt"
                     />
                 </Col>
+                <Col sm = {7}></Col>
                 <Col>
                     <div>
                         name: {profileDetails.username}
@@ -123,12 +125,13 @@ export default function Profile() {
                 </Col>
             </Row>
         </Container>
+        <br></br>
         <Container>
             <Row>
                 {
                     filtereProfileItems.map(
                         favouriteItem => (
-                            <Col sm={2} key={favouriteItem.id}>
+                            <Col sm={3} key={favouriteItem.id}>
                                 <React.Fragment>
                                     <ItemComponent id={favouriteItem.id} item={favouriteItem} />
                                 </React.Fragment>
