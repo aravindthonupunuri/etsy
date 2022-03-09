@@ -26,7 +26,7 @@ export default function ShopComponent() {
         let shopDetails = await res.json();
         shopDetails = shopDetails[0];
         setShopDetails(shopDetails);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(
@@ -34,7 +34,7 @@ export default function ShopComponent() {
         async () => {
             console.log("in component of shop!")
             const token = sessionStorage.getItem('token');
-            if(shopDetails.shopownerId !== undefined) {
+            if (shopDetails.shopownerId !== undefined) {
                 let res = await fetch(`${backendServer}/api/shopOwnerProfile/${shopDetails.shopownerId}`, {
                     method: 'GET',
                     headers: {

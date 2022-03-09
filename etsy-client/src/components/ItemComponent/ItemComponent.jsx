@@ -6,6 +6,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useHistory } from "react-router";
 
 export default function ItemComponent(props) {
+    console.log(props.item)
     const history = useHistory();
     let homeItem = props.item
     const [isFav, setIsFav] = useState(false);
@@ -71,24 +72,25 @@ export default function ItemComponent(props) {
         history.push({
             pathname: `/item/${homeItem.id}/${homeItem.shopname}`,
             state: {
-                item: homeItem
-            } 
+                item: homeItem,
+                isFav: isFav
+            }
         })
     }
 
     return <Card onClick={redirectToItemDetails} style={{ width: '300px' }}>
-        <Card.Img variant="top" src={homeItem.itemimage} style = {{width: '300px', height: '150px'}}/>
+        <Card.Img variant="top" src={homeItem.itemimage} style={{ width: '300px', height: '150px' }} />
         <Card.Body>
             <Card.Title>{homeItem.itemname}</Card.Title>
             <span>
                 <FavoriteIcon
                     style={favStyle}
                     onClick={
-                        (event) => {                            
+                        (event) => {
                             !isFav ?
-                            markFav()
-                            :
-                            unMarkFav()
+                                markFav()
+                                :
+                                unMarkFav()
                             event.stopPropagation()
                         }
 
