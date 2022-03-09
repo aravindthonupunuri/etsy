@@ -7,9 +7,15 @@ import backendServer from '../../webconfig';
 // import { useDispatch } from "react-redux";
 import setHomeReduxFromDb from "../../actions/homeAction";
 import ItemComponent from '../ItemComponent/ItemComponent';
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 
 require("./Home.css")
+
+function valuetext(value) {
+  return `${value}$`;
+}
 
 export default function Home() {
   let [homeItems, setHomeItems] = useState([]);
@@ -19,6 +25,14 @@ export default function Home() {
   // let dispatch = useDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // useEffect(dispatch(setHomeReduxFromDb), [])
+
+  const [value, setValue] = useState([0, 1000]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+
   const types = {
     price: "price",
     quantity: "available_quantity",
@@ -28,7 +42,6 @@ export default function Home() {
   useEffect(() => {
     const sortItems = (type) => {
       const sortProperty = types[type];
-      debugger
       const sorted = [...filtItems].sort(
         (a, b) => b[sortProperty] - a[sortProperty]
       );
@@ -69,6 +82,19 @@ export default function Home() {
     filteredHomeItems(res)
   }
 
+  function handlePriceRange() {
+    console.log("in price range")
+    let min = value[0];
+    let max = value[1];
+    console.log(min + " jj " + max)
+    let res = [];
+    for(let i = 0; i < homeItems.length; i++) {
+        if(homeItems[i].price >= min && homeItems[i].price <= max) res.push(homeItems[i]);
+    }
+    filteredHomeItems(res);
+  }
+
+
   if (token === null) return <Redirect to="/login" />;
   else
     return (
@@ -80,16 +106,18 @@ export default function Home() {
         <Container>
           <Row>
             <Col sm={3}>
-              {/* <Form.Select style={{ width: '200px', marginBottom: '20px' }}
-                className="countryPicker"
-                name="country"
-                // value={profileDetails.country}
-                onChange={(e) => handleFilter(e)}
-                aria-label="Default select example"
-              >
-                <option>Filters</option>
-                <option value="pricerange">Price Range</option>
-              </Form.Select> */}
+                <Box sx={{ width: 300 }}>
+                <Slider
+                min={0}
+                max={1000}
+                  getAriaLabel={() => 'Price range'}
+                  value={value}
+                  onChange={handleChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valuetext}
+                />
+              </Box>
+              <Button onClick = {handlePriceRange}>Price Filter</Button>
               
             </Col>
             <Col sm={6}></Col>
@@ -104,9 +132,8 @@ export default function Home() {
               </Form.Select>
             </Col>
           </Row>
-
         </Container>
-
+        <br></br>
         <Container>
           {console.log("fitered items ")}
           {console.log(filtItems)}

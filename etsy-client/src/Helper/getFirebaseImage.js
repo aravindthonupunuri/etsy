@@ -10,7 +10,6 @@ export default function getFirebaseImage(pic, path) {
 
     const storage = getStorage(firebaseApp);
     const imagesRef = ref(storage, `/${path}/${pic.name}`);
-    debugger;
     const uploadTask = uploadBytesResumable(imagesRef, pic);
     
     // Listen for state changes, errors, and completion of the upload.
