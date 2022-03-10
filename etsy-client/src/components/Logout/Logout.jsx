@@ -1,27 +1,26 @@
 import { Redirect } from 'react-router-dom';
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import loginAction from "../../actions/loginAction"
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import logoutAction from "../../actions/logoutAction";
+import { useHistory } from 'react-router';
 
 const Logout = () => {
+    const hist = useHistory();
     const dispatch = useDispatch();
-    const [isLoggedOut, setIsLogOut] = useState(false);
-    if(!isLoggedOut) {
-        return (
-            <div>
-                <button onClick={() => {
-                    setIsLogOut( prev => !prev);
-                    dispatch(loginAction("", ""));
-                    sessionStorage.clear('token');
-                    }}>
-                    logout
-                </button>
-            </div>
-        )
+    let logoutHandle = async () => {
+        // debugger;
+        console.log("progress")
+        dispatch(logoutAction());                  
+        sessionStorage.clear('token');
+        hist.replace("/login");
     }
-    else {
-        return <Redirect to = "/login" />
-    }
+
+    return (
+        <div>
+            <div onClick={logoutHandle}
+            > logout </div>
+        </div>
+    )
 }
 
 export default Logout

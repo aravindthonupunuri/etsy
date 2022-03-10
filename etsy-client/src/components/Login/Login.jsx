@@ -36,11 +36,8 @@ const Login = () => {
       body: JSON.stringify({ emailId, password }),
     })
     let token = await res.text();
-    // console.log(res.status);
     if (res.status === 200) {
-      // console.log("in codeeee")
-      // console.log(res.headers)
-      dispatch(loginAction(emailId, password));
+      dispatch(loginAction(emailId));
       sessionStorage.setItem('token', token);
       history.replace('/');
     }

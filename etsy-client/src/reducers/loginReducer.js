@@ -1,18 +1,22 @@
-const initialState = {name: "", password: ""}
+const initialState = {emailId: ""}
 
 export default function loginReducer(loginstate = initialState, action) {
     switch(action.type) {
        case 'loginState': {
-        // console.log("in reducer loginState action" + action.name);
+        console.log("in reducer loginState action" + action.emailId);
         return {
             ...loginstate,
-            name: action.name
+            emailId: action.emailId
         }
+       }
+       case 'logoutState': {
+           console.log("in logout")
+        return {
+            emailId: ""
+        }           
        }
        default: {
         return loginstate 
-       }
-             
+       }             
     }
 }
-

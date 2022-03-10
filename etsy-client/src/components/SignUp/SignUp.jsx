@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import backendServer from '../../webconfig';
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import logo from "../../images/logo.png"
+import signupAction from '../../actions/signupAction';
+import logo from "../../images/logo.png";
 
 require('./SignUp.css');
 
 
 function SignUp() {
+  const dispatch = useDispatch();
+  const signupDetailsFromRedux = useSelector(state => state.signupState)
+  console.log("signup details from redux "+ signupDetailsFromRedux.emailId)
   const [loginError, setErrorMsg] = useState("");
   const history = useHistory();
   const [{ name, emailId, password }, setSignupState] = useState({
@@ -36,6 +41,10 @@ function SignUp() {
         body: JSON.stringify(customer),
       })
       if (res.status === 200) {
+        dispatch(signupAction({
+          emailId: emailId,
+          username: name
+        }))
         history.replace("/login");
       }
       else {

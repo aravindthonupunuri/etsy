@@ -6,6 +6,7 @@ import * as FaIcons from 'react-icons/fa';
 import logo from '../../images/logo.png';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import Logout from '../Logout/Logout';
 require('./Appbar.css')
 
 export default function Appbar(props) {
@@ -48,10 +49,7 @@ export default function Appbar(props) {
           }>Orders</Nav.Link>
           <Nav.Link>
             <FaIcons.FaSignOutAlt />
-            <span onClick={() => {
-              sessionStorage.clear('token');
-              hist.replace("/login");
-            }}>Logout</span>
+            <Logout />
           </Nav.Link>
         </Nav>
       </Container>

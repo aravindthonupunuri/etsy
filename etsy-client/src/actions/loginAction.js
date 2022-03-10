@@ -1,8 +1,7 @@
 
-export default function loginAction(emailId, password) {
+export default function loginAction(emailId) {
     return {
         type: "loginState",
-        emailId: emailId,
-        password: password
+        emailId: emailId
     }
 }
