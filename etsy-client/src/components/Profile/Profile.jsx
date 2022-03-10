@@ -2,6 +2,7 @@
 import Appbar from "../Appbar/Appbar";
 import React, { useState, useEffect } from 'react'
 import backendServer from '../../webconfig';
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import ItemComponent from "../ItemComponent/ItemComponent";
@@ -12,8 +13,11 @@ export default function Profile() {
     // console.log("in profile..");
     const hist = useHistory();
     const [filtereProfileItems, setFilterProfileItems] = useState([]);
-
-    const [profileDetails, setProfileDetails] = useState({});
+    const userDetails = useSelector(state => state.profileState)
+    console.log("in profile");
+    console.log(userDetails)
+    const [profileDetails, setProfileDetails] = useState(userDetails);
+    // const [profileDetails, setProfileDetails] = useState({});
     const [favouriteItems, setFavouriteItems] = useState([]);
 
     const [nameToSearch, setNameToSearch] = useState("");

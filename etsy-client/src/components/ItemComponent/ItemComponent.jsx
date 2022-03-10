@@ -6,7 +6,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useHistory } from "react-router";
 
 export default function ItemComponent(props) {
-    console.log(props.item)
+    // console.log(props.item)
     const history = useHistory();
     let homeItem = props.item
     const [isFav, setIsFav] = useState(false);
@@ -68,7 +68,7 @@ export default function ItemComponent(props) {
     }
 
     let redirectToItemDetails = () => {
-        console.log("hi..");
+        // console.log("hi..");
         history.push({
             pathname: `/item/${homeItem.id}/${homeItem.shopname}`,
             state: {

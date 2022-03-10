@@ -135,8 +135,8 @@ export default function Home() {
         </Container>
         <br></br>
         <Container>
-          {console.log("fitered items ")}
-          {console.log(filtItems)}
+          {/* {console.log("fitered items ")}
+          {console.log(filtItems)} */}
           <Row>
             {
               filtItems.map(
@@ -144,7 +144,7 @@ export default function Home() {
                 (
                   <Col sm={3} key={homeItem.id}>
                     <>
-                      {console.log(homeItem.price)}
+                      {/* {console.log(homeItem.price)} */}
                       <ItemComponent id={homeItem.id} item={homeItem} />
                       <br /><br /><br />
                     </>

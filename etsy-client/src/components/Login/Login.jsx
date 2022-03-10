@@ -2,8 +2,9 @@ import backendServer from '../../webconfig';
 import React, { useState } from 'react';
 import { useHistory } from "react-router";
 import { useDispatch } from "react-redux";
-import loginAction from "../../actions/loginAction"
-import logo from "../../images/logo.png"
+import loginAction from "../../actions/loginAction";
+import userdetailsAction from '../../actions/userdetailsAction';
+import logo from "../../images/logo.png";
 import { Redirect } from 'react-router-dom';
 require("./Login.css")
 
@@ -38,6 +39,7 @@ const Login = () => {
     let token = await res.text();
     if (res.status === 200) {
       dispatch(loginAction(emailId));
+      dispatch(userdetailsAction(token));
       sessionStorage.setItem('token', token);
       history.replace('/');
     }
