@@ -6,6 +6,7 @@ import loginAction from "../../actions/loginAction";
 import userdetailsAction from '../../actions/userdetailsAction';
 import logo from "../../images/logo.png";
 import { Redirect } from 'react-router-dom';
+import favouriteitemsAction from '../../actions/favouriteitemsAction';
 require("./Login.css")
 
 const Login = () => {
@@ -26,7 +27,6 @@ const Login = () => {
   }
 
   const checkLogin = async (e) => {
-    // console.log("hi")
     e.preventDefault();
     let res = await fetch(`${backendServer}/api/user/login`, {
       method: 'POST',
@@ -40,6 +40,7 @@ const Login = () => {
     if (res.status === 200) {
       dispatch(loginAction(emailId));
       dispatch(userdetailsAction(token));
+      dispatch(favouriteitemsAction(token));
       sessionStorage.setItem('token', token);
       history.replace('/');
     }

@@ -12,13 +12,17 @@ import { useHistory } from 'react-router';
 export default function Profile() {
     // console.log("in profile..");
     const hist = useHistory();
-    const [filtereProfileItems, setFilterProfileItems] = useState([]);
     const userDetails = useSelector(state => state.profileState)
     console.log("in profile");
-    console.log(userDetails)
+    console.log(userDetails);
     const [profileDetails, setProfileDetails] = useState(userDetails);
     // const [profileDetails, setProfileDetails] = useState({});
-    const [favouriteItems, setFavouriteItems] = useState([]);
+    const favItems = useSelector(state => state.favouriteState)
+    console.log("fav items from redux in profile ")
+    console.log(favItems)
+    const [favouriteItems, setFavouriteItems] = useState(favItems);
+    // const [favouriteItems, setFavouriteItems] = useState([]);
+    const [filtereProfileItems, setFilterProfileItems] = useState(favItems);
 
     const [nameToSearch, setNameToSearch] = useState("");
     const handleFilterEvent = (e) => {
@@ -27,7 +31,6 @@ export default function Profile() {
 
     useEffect(
         async () => {
-            // console.log("in set profile details");
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/favourites`, {
                 method: 'GET',
