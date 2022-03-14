@@ -8,8 +8,6 @@ const Logout = () => {
     const hist = useHistory();
     const dispatch = useDispatch();
     let logoutHandle = async () => {
-        // debugger;
-        console.log("progress")
         dispatch(logoutAction());                  
         sessionStorage.clear('token');
         hist.replace("/login");

@@ -73,10 +73,8 @@ export default function Home() {
   }
 
   function handlePriceRange() {
-    console.log("in price range")
     let min = value[0];
     let max = value[1];
-    console.log(min + " jj " + max)
     let res = [];
     for(let i = 0; i < homeItems.length; i++) {
         if(homeItems[i].price >= min && homeItems[i].price <= max) res.push(homeItems[i]);

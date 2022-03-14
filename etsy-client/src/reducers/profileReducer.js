@@ -12,10 +12,8 @@ const initialState = {
 }
 
 export default function profileReducer(profileState = initialState, action) {
-    // console.log(action)
     switch(action.type) {
        case 'profileState': {
-        console.log("in reducer profileState action" + action.action.emailId);
         return {
             ...profileState,
             ...action.action

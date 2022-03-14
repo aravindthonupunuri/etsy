@@ -12,7 +12,6 @@ export default function userdetailsAction(token) {
         })
         let action = await res.json();
         action = action[0];   
-        // console.log(action)
         dispatch({type: 'profileState', action})     
     }
 }

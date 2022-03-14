@@ -15,6 +15,12 @@ export default function Footer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currencyType])
 
+    useEffect(() => {
+      // dispatch(loginAction(emailId));
+      dispatch(currencyAction(currencyType))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div>
     <div style = {{

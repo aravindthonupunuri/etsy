@@ -39,7 +39,6 @@ export default function Shop() {
             setShop(true);
         }
         else {
-            // console.log("hii using effect!")
             setShop(false);
         }
     }, [])
@@ -47,7 +46,6 @@ export default function Shop() {
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps        
         async () => {
-            console.log("in component of shop!")
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/profile`, {
                 method: 'GET',
@@ -69,7 +67,6 @@ export default function Shop() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getShopItems = async () => {
-        // console.log("in get shop items")
         const token = sessionStorage.getItem('token');
         let res = await fetch(`${backendServer}/api/shop/items/${shopDetails.shopname}`, {
             method: 'GET',
@@ -127,7 +124,6 @@ export default function Shop() {
             body: JSON.stringify({ shopname: shopDetails.shopname, shopimage: downloadURL }),
         })
         if (res.status === 200) {
-            console.log("updated image")
             setShopDetails(
                 preState => ({
                     ...preState,

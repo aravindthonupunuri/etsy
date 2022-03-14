@@ -11,7 +11,6 @@ export default function Orders() {
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         async () => {
-            // console.log("in set profile details");
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/orders`, {
                 method: 'GET',
@@ -38,9 +37,6 @@ export default function Orders() {
         })
         let result = await res.json();
         setOrderItems(result);
-
-        // <ItemComponent id={shopItem.id} item={shopItem} />
-        console.log(result)
     }
 
     return <div>

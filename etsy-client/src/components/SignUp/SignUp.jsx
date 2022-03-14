@@ -7,11 +7,8 @@ import logo from "../../images/logo.png";
 
 require('./SignUp.css');
 
-
 function SignUp() {
   const dispatch = useDispatch();
-  const signupDetailsFromRedux = useSelector(state => state.signupState)
-  console.log("signup details from redux "+ signupDetailsFromRedux.emailId)
   const [loginError, setErrorMsg] = useState("");
   const history = useHistory();
   const [{ name, emailId, password }, setSignupState] = useState({
@@ -20,11 +17,11 @@ function SignUp() {
     password: ""
   })
 
+  // eslint-disable-next-line no-useless-escape
   const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(`${name} ${emailId} ${password}`);
     if (!regex.test(emailId)) { setErrorMsg("Enter valid email id") }
     else {
       const customer = {

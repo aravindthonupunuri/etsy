@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 
 export default function ShopComponent() {
     const { shopName } = useParams();
-    console.log(shopName);
     const [shopItems, setShopItems] = useState([]);
     const [shopDetails, setShopDetails] = useState({});
     const [userDetails, setUserDetails] = useState({});
@@ -32,7 +31,6 @@ export default function ShopComponent() {
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps        
         async () => {
-            console.log("in component of shop!")
             const token = sessionStorage.getItem('token');
             if (shopDetails.shopownerId !== undefined) {
                 let res = await fetch(`${backendServer}/api/shopOwnerProfile/${shopDetails.shopownerId}`, {
@@ -55,7 +53,6 @@ export default function ShopComponent() {
         // eslint-disable-next-line no-use-before-define
         // eslint-disable-next-line react-hooks/exhaustive-deps
         async () => {
-            // console.log("in get shop items")
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/shop/items/${shopName}`, {
                 method: 'GET',
@@ -75,7 +72,6 @@ export default function ShopComponent() {
     let username = userDetails.username
 
     return <div>
-        {console.log("shop image is" + shopDetails.shopimage)}
         <Appbar />
         <div>
             <Container>

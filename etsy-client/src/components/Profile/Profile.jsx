@@ -2,7 +2,7 @@
 import Appbar from "../Appbar/Appbar";
 import React, { useState, useEffect } from 'react'
 import backendServer from '../../webconfig';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import ItemComponent from "../ItemComponent/ItemComponent";
@@ -11,18 +11,11 @@ import { useHistory } from 'react-router';
 import noprofilemage from '../../images/noprofileimage.png';
 
 export default function Profile() {
-    // console.log("in profile..");
     const hist = useHistory();
     const userDetails = useSelector(state => state.profileState)
-    console.log("in profile");
-    console.log(userDetails);
     const [profileDetails, setProfileDetails] = useState(userDetails);
-    // const [profileDetails, setProfileDetails] = useState({});
     const favItems = useSelector(state => state.favouriteState)
-    console.log("fav items from redux in profile ")
-    console.log(favItems)
     const [favouriteItems, setFavouriteItems] = useState(favItems);
-    // const [favouriteItems, setFavouriteItems] = useState([]);
     const [filtereProfileItems, setFilterProfileItems] = useState(favItems);
 
     const [nameToSearch, setNameToSearch] = useState("");
@@ -53,7 +46,6 @@ export default function Profile() {
                     mode: 'cors'
                 })
                 res = await res.json();
-                // console.log(res[0])
                 favItems.push(res)
             }
             setFavouriteItems(favItems);
@@ -67,7 +59,6 @@ export default function Profile() {
 
     useEffect(
         async () => {
-            console.log("in set profile details");
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/profile`, {
                 method: 'GET',
@@ -86,7 +77,6 @@ export default function Profile() {
     )
 
     function filterItems(name) {
-        console.log("in home filter items" + name);
         let res = favouriteItems.filter(
             favItem => favItem.itemname.includes(name)
         )

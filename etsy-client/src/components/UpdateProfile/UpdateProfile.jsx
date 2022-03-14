@@ -13,7 +13,6 @@ export default function UpdateProfile() {
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         async () => {
-            console.log("in set profile details");
             const token = sessionStorage.getItem('token');
             let res = await fetch(`${backendServer}/api/user/profile`, {
                 method: 'GET',
@@ -25,13 +24,11 @@ export default function UpdateProfile() {
             })
             let result = await res.json();
             result = result[0];
-            console.log(result)
             setProfileDetails(result);
         }, []
     )
 
     const handleEvent = (event) => {
-        console.log("event is " + event.target.value)
         setProfileDetails(preState => ({ ...preState, [event.target.name]: event.target.value }))
     }
 
@@ -59,7 +56,7 @@ export default function UpdateProfile() {
     const updateUser = async (user) => {
         const token = sessionStorage.getItem("token");
 
-        let res = await fetch(`${backendServer}/api/user/update/profile`, {
+        await fetch(`${backendServer}/api/user/update/profile`, {
             method: "PUT",
             headers: {
                 "auth-token": token,
@@ -68,11 +65,6 @@ export default function UpdateProfile() {
             mode: "cors",
             body: JSON.stringify(user),
         });
-
-        if (res.status === 200) {
-            let response = await res.json();
-            console.log(response);
-        }
     };
     
     return (<>

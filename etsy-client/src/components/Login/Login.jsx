@@ -45,7 +45,6 @@ const Login = () => {
       history.replace('/');
     }
     else {
-      console.log("email is not there");
       setErrorMsg('Please enter valid credentials');
     }
   }

@@ -46,7 +46,6 @@ export default function UpdateItem(props) {
 
     async function updateItem() {
         let token = sessionStorage.getItem('token');
-        console.log("image adding is " + itemImageFileUrl);
         await fetch(`${backendServer}/api/shop/update/item`, {
             method: 'PUT',
             headers: {

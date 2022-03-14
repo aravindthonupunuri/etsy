@@ -43,7 +43,6 @@ export default function Item(props) {
 
     async function addItem() {
         let token = sessionStorage.getItem('token');
-        console.log("image adding is " + itemImageFileUrl);
         await fetch(`${backendServer}/api/shop/add/item`, {
             method: 'POST',
             headers: {

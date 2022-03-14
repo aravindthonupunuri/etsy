@@ -22,7 +22,6 @@ export default function Cart() {
               mode: 'cors'
             })
             let cartItems = await res.json();
-            console.log(cartItems)
             let items = [];
             for(let i = 0; i < cartItems.length; i++) {
                 let it = await fetch(`${backendServer}/api/item/${cartItems[i].itemid}`, {
@@ -39,7 +38,6 @@ export default function Cart() {
                   )
                   items.push(it);
             }
-            console.log(items);
             setCartItems(items)
             // eslint-disable-next-line react-hooks/exhaustive-deps
           }, []        
@@ -57,9 +55,7 @@ export default function Cart() {
       })
       res = await res.json()
       let orderid = res.orderid;
-console.log(cartItems)
       for(let i = 0; i < cartItems.length; i++) {
-        console.log("cart item" + cartItems[i]);
         let orderItem = {
           orderid: orderid,
           itemid: cartItems[i].id,
@@ -67,7 +63,6 @@ console.log(cartItems)
           price: cartItems[i].price,
           quantity: 0
         }
-        console.log("order item" + orderItem)
         await fetch(`${backendServer}/api/order/additem`, {
             method: 'POST',
             headers: {
@@ -85,13 +80,8 @@ console.log(cartItems)
         'auth-token': token,
         'Content-Type': 'application/json'
       },
-      mode: 'cors',
-      // body: JSON.stringify(orderItem)
-    }) 
-    
-
-
-      // console.log(res);        
+      mode: 'cors'
+    })      
         history.push(`/orders`)
     }
 

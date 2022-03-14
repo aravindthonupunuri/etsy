@@ -11,8 +11,7 @@ export default function ItemDetails(props) {
     const { itemId, shopName } = useParams();
     const location = useLocation();
     const itemDetails = location.state.item;
-    // console.log(location.state.item)
-    let [item, setItem] = useState({
+    let [item] = useState({
         id: itemDetails.id,
         itemname: itemDetails.itemname,
         itemimage: itemDetails.itemimage,
@@ -49,7 +48,6 @@ export default function ItemDetails(props) {
 
 
     let addToCart = async () => {
-        console.log("adding to cart");
         let cartItem = {
             itemid: itemId,
             shopname: shopName,
@@ -65,7 +63,6 @@ export default function ItemDetails(props) {
             body: JSON.stringify(cartItem),
         })
         if(res.status === 200) {
-            console.log("added to cart");
         }
     }   
 

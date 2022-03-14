@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Card, Col } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import backendServer from '../../webconfig';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -7,7 +7,6 @@ import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 
 export default function ItemComponent(props) {
-    // console.log(props.item)
     const currency = useSelector(state => state.currencyState)
     console.log(currency)
     const history = useHistory();
@@ -71,7 +70,6 @@ export default function ItemComponent(props) {
     }
 
     let redirectToItemDetails = () => {
-        // console.log("hi..");
         history.push({
             pathname: `/item/${homeItem.id}/${homeItem.shopname}`,
             state: {
@@ -100,6 +98,7 @@ export default function ItemComponent(props) {
                     } />
             </span>
             <Card.Text>
+                {console.log("hi.. " + currency.currency)}
                 {homeItem.price} {" "} {currency.currency}
             </Card.Text>
         </Card.Body>

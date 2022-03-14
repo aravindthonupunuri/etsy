@@ -1,4 +1,4 @@
-const initialState = {currency: ""};
+const initialState = {currency: "$"};
 
 export default function currencyReducer(state = initialState, action) {
     switch(action.type) {
