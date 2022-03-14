@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import backendServer from '../../webconfig';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import signupAction from '../../actions/signupAction';
 import logo from "../../images/logo.png";

@@ -10,13 +10,11 @@ export default function Footer() {
     const [currencyType, setCurrencyType] = useState("$");
     const dispatch = useDispatch();
     useEffect(() => {
-        // dispatch(loginAction(emailId));
         dispatch(currencyAction(currencyType))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currencyType])
 
     useEffect(() => {
-      // dispatch(loginAction(emailId));
       dispatch(currencyAction(currencyType))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

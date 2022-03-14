@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 export default function ItemComponent(props) {
     const currency = useSelector(state => state.currencyState)
-    console.log(currency)
     const history = useHistory();
     let homeItem = props.item
     const [isFav, setIsFav] = useState(false);

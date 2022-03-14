@@ -8,7 +8,7 @@ import getFirebaseImage from "../../Helper/getFirebaseImage";
 
 export default function UpdateProfile() {
     const hist = useHistory();
-    const [userProfilePic, setUserProfilePic] = useState(noProfileImage);
+    const [userProfilePic, setUserProfilePic] = useState(null);
     const [profileDetails, setProfileDetails] = useState([]);
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,6 +67,11 @@ export default function UpdateProfile() {
         });
     };
     
+    const getProfilePicture = () => {
+        if(profileDetails.profilePicture == null) return noProfileImage
+        else return profileDetails.profilePicture
+    }
+
     return (<>
         <Appbar />
         <p style={{ fontWeight: "bold", marginLeft: '50px', marginTop: '30px' }}>
@@ -95,7 +100,7 @@ export default function UpdateProfile() {
                             margin: "auto 160px",
                             float: "left",
                         }}
-                        src={profileDetails.profilePicture}
+                        src={getProfilePicture()}
                         alt="alt"
                     />
                 </Form.Group>
