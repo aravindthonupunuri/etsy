@@ -3,6 +3,7 @@ import homeReducer from "./homeReducer";
 import signupReducer from "./signupReducer";
 import profileReducer from "./profileReducer";
 import favouriteReducer from "./favouriteReducer";
+import currencyReducer from "./currencyReducer";
 
 import { combineReducers } from 'redux';
 
@@ -12,7 +13,8 @@ export default combineReducers(
         homeState: homeReducer,
         signupState: signupReducer,
         profileState: profileReducer,
-        favouriteState: favouriteReducer
+        favouriteState: favouriteReducer,
+        currencyState: currencyReducer
     }
 )
 

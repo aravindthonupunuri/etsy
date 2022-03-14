@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
 import backendServer from '../../webconfig';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useHistory } from "react-router";
+import { useSelector } from "react-redux";
 
 export default function ItemComponent(props) {
     // console.log(props.item)
+    const currency = useSelector(state => state.currencyState)
+    console.log(currency)
     const history = useHistory();
     let homeItem = props.item
     const [isFav, setIsFav] = useState(false);
@@ -97,7 +100,7 @@ export default function ItemComponent(props) {
                     } />
             </span>
             <Card.Text>
-                {homeItem.price} $
+                {homeItem.price} {" "} {currency.currency}
             </Card.Text>
         </Card.Body>
     </Card>

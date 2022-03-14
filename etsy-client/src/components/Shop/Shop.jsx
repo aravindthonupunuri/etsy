@@ -6,12 +6,13 @@ import Item from '../Item/Item';
 import UpdateItem from '../Item/UpdateItem';
 import ItemComponent from '../ItemComponent/ItemComponent';
 import noshopimage from '../../images/noshopimage.jpeg';
+import noprofilemage from '../../images/noprofileimage.png';
 import getFirebaseImage from "../../Helper/getFirebaseImage";
 
 require('./Shop.css');
 
 export default function Shop() {
-    const [shopimage, setShopImage] = useState(noshopimage);
+    const [shopimage, setShopImage] = useState(null);
     const [salescount, setSalescount] = useState(0);
     const [nameOfShop, setShopName] = useState("");
     const [shopItems, setShopItems] = useState([]);
@@ -88,13 +89,11 @@ export default function Shop() {
         getShopItems, [shopDetails]
     );
 
-
-
     const checkAndCreateShop = async () => {
-        let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
+        // let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
+        debugger;
         const obj = {
             shopname: nameOfShop,
-            shopimage: downloadURL,
             salescount: salescount
         }
         const token = sessionStorage.getItem('token');
@@ -139,6 +138,16 @@ export default function Shop() {
         }
     }
 
+    const getProfilePic = () => {
+        if(userDetails.profilePicture == null) return noprofilemage;
+        else return userDetails.profilePicture;
+    }
+    
+    const getShopImage = () => {
+        if(shopDetails.shopimage == null) return noshopimage;
+        else return shopDetails.shopimage;
+    }
+
     if (isShop === true) {
         let shopname = shopDetails.shopname
         let username = userDetails.username
@@ -152,7 +161,7 @@ export default function Shop() {
                         <Col sm={2}>
                             <img
                                 style={{ width: "200px", height: "200px" }}
-                                src={shopDetails.shopimage}
+                                src={getShopImage()}
                                 alt="alt"
                             />
                         </Col>
@@ -186,7 +195,7 @@ export default function Shop() {
                         </Col>
                         <Col sm={2}>
                             <h5> Shop Owner </h5> <br></br>
-                            <img src={userDetails.profilePicture} style={{ width: "100px", height: "100px" }} alt="alt" /> <br></br>
+                            <img src={getProfilePic()} style={{ width: "100px", height: "100px" }} alt="alt" /> <br></br>
                             <h5>{username}</h5>
                         </Col>
                     </Row>

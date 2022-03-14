@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ItemComponent from "../ItemComponent/ItemComponent";
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory } from 'react-router';
+import noprofilemage from '../../images/noprofileimage.png';
 
 export default function Profile() {
     // console.log("in profile..");
@@ -91,17 +92,19 @@ export default function Profile() {
         )
         setFilterProfileItems(res)
     }
-
+    const getProfileImage = () => {
+        if(profileDetails.profilePicture == null) return noprofilemage;
+        else return profileDetails.profilePicture;
+    }
     return <div>
         <Appbar />
         <br></br>
-        {console.log("profile image " + profileDetails.profilePicture)}
         <Container>
             <Row>
                 <Col sm = {3}>
                     <img
                         style={{ width: "200px", height: "200px" }}
-                        src={profileDetails.profilePicture}
+                        src={getProfileImage()}
                         alt="alt"
                     />
                 </Col>

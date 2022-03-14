@@ -1,11 +1,9 @@
 import { Redirect } from 'react-router-dom';
 import React from 'react';
-import { useSelector } from "react-redux"
 import Appbar from '../Appbar/Appbar';
 import { useState, useEffect } from 'react';
 import backendServer from '../../webconfig';
-// import { useDispatch } from "react-redux";
-import setHomeReduxFromDb from "../../actions/homeAction";
+import Footer from '../Footer/Footer';
 import ItemComponent from '../ItemComponent/ItemComponent';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import Box from '@mui/material/Box';
@@ -18,20 +16,17 @@ function valuetext(value) {
 }
 
 export default function Home() {
+  
   let [homeItems, setHomeItems] = useState([]);
   let [filtItems, filteredHomeItems] = useState([]);
   let token = sessionStorage.getItem('token');
   const [sortType, setSortType] = useState("");
-  // let dispatch = useDispatch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(dispatch(setHomeReduxFromDb), [])
 
   const [value, setValue] = useState([0, 1000]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
 
   const types = {
     price: "price",
@@ -65,16 +60,11 @@ export default function Home() {
         mode: 'cors'
       })
       let homeItems = await res.json();
-      // console.log("items in home" + homeItems.length);
       setHomeItems(homeItems)
       filteredHomeItems(homeItems)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-  // homeItems = useSelector((state) => {
-  //   console.log("in useSelector of home");
-  //   return state.homeState.items
-  // }
-  //   );
+
   function filterItems(name) {
     let res = homeItems.filter(
       homeItem => homeItem.itemname.includes(name)
@@ -135,8 +125,6 @@ export default function Home() {
         </Container>
         <br></br>
         <Container>
-          {/* {console.log("fitered items ")}
-          {console.log(filtItems)} */}
           <Row>
             {
               filtItems.map(
@@ -144,7 +132,6 @@ export default function Home() {
                 (
                   <Col sm={3} key={homeItem.id}>
                     <>
-                      {/* {console.log(homeItem.price)} */}
                       <ItemComponent id={homeItem.id} item={homeItem} />
                       <br /><br /><br />
                     </>
@@ -154,7 +141,7 @@ export default function Home() {
             }
           </Row>
         </Container>
-
+     <Footer />
       </div >
     );
 }
