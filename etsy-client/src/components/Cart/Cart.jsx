@@ -1,110 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import backendServer from '../../webconfig';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Appbar from '../Appbar/Appbar';
-import ItemComponent from '../ItemComponent/ItemComponent';
-import { useHistory } from "react-router";
+import { Container, Row, Col, Table, Button } from "react-bootstrap";
 
-export default function Cart() {
-    const history = useHistory();
-    let [cartItems, setCartItems] = useState([]);
+require("./Cart.css");
 
-    let token = sessionStorage.getItem('token');
-    useEffect(
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        async () => {
-            let res = await fetch(`${backendServer}/api/cart/items`, {
-              method: 'GET',
-              headers: {
-                'auth-token': token,
-                'Content-Type': 'application/json'
-              },
-              mode: 'cors'
-            })
-            let cartItems = await res.json();
-            let items = [];
-            for(let i = 0; i < cartItems.length; i++) {
-                let it = await fetch(`${backendServer}/api/item/${cartItems[i].itemid}`, {
-                    method: 'GET',
-                    headers: {
-                      'auth-token': token,
-                      'Content-Type': 'application/json'
-                    },
-                    mode: 'cors'
-                  })
-                  .then(
-                      res =>
-                      (res.json())
-                  )
-                  items.push(it);
-            }
-            setCartItems(items)
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-          }, []        
-    )
+function Cart() {
+  const cart = useSelector((state) => state.cartState);
+  const { cartItems } = cart;
 
-    let redirectToMyPurchases = async () => {
-      let token = sessionStorage.getItem('token');
-      let res = await fetch(`${backendServer}/api/order`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'auth-token': token
-          },
-          mode: 'cors'
-      })
-      res = await res.json()
-      let orderid = res.orderid;
-      for(let i = 0; i < cartItems.length; i++) {
-        let orderItem = {
-          orderid: orderid,
-          itemid: cartItems[i].id,
-          shopname: cartItems[i].shopname,
-          price: cartItems[i].price,
-          quantity: 0
-        }
-        await fetch(`${backendServer}/api/order/additem`, {
-            method: 'POST',
-            headers: {
-              'auth-token': token,
-              'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify(orderItem)
-          })     
-    }
+  const itemsRender = [];
+  let totalPrice = 0;
+  for (let i = 0; i < cartItems.length; i += 1) {
+    const item = (
+      <tr>
+        <td>{cartItems[i].name}</td>
+        <td>${cartItems[i].price}</td>
+        <td>{cartItems[i].requestedQuantity}</td>
+        <td>${cartItems[i].price * cartItems[i].requestedQuantity}</td>
+      </tr>
+    );
+    totalPrice += cartItems[i].price * cartItems[i].requestedQuantity;
+    itemsRender.push(item);
+  }
 
-    await fetch(`${backendServer}/api/cart`, {
-      method: 'DELETE',
-      headers: {
-        'auth-token': token,
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors'
-    })      
-        history.push(`/orders`)
-    }
+  return (
+    <div>
+      <Appbar />
 
-    return <div>
-        <Appbar />
-        in cart
+      <Container>
         <Row>
-          {
-            cartItems.map(
-                cartItem =>
-              (
-                <Col sm={2} key={cartItem.id}>
-                  <React.Fragment>
-                    <ItemComponent id={cartItem.id} item={cartItem} />
-                    <br /><br /><br />
-                  </React.Fragment>
-                </Col>
-              )
-            )
-          }
+          <Col>
+            <h1>Your Cart</h1>
+          </Col>
         </Row>
-        <Button onClick={redirectToMyPurchases}>
-            place order
-            </Button>        
+        <br />
+        <Table className="content-table">
+          <thead>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+          </thead>
+          <tbody>
+            {itemsRender}
+            <br />
+            <br />
+            <br />
+            <div style={{ position: "absolute", right: "330px" }}>
+              <b>Items Total</b>
+              <b>$ {totalPrice}</b>
+            </div>
+          </tbody>
+        </Table>
+        <Button
+          variant="success"
+          // onClick={(e) => this.placeOrder(e)}
+        >
+          Place order
+        </Button>
+      </Container>
     </div>
+  );
 }
+
+export default Cart;

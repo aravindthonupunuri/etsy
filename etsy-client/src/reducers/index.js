@@ -4,6 +4,7 @@ import signupReducer from "./signupReducer";
 import profileReducer from "./profileReducer";
 import favouriteReducer from "./favouriteReducer";
 import currencyReducer from "./currencyReducer";
+import cartReducer from "./cartReducer";
 
 import { combineReducers } from 'redux';
 
@@ -14,7 +15,8 @@ export default combineReducers(
         signupState: signupReducer,
         profileState: profileReducer,
         favouriteState: favouriteReducer,
-        currencyState: currencyReducer
+        currencyState: currencyReducer,
+        cartState: cartReducer
     }
 )
 

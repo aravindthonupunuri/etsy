@@ -19,6 +19,23 @@ router.post('/cart/additem', verify, (req, res) => {
     )
 })
 
+router.put("/cart/updateitem", verify, (req, res) => {
+    const { itemid, shopname, quantity } = req.body;
+  
+    connection.query(
+      "UPDATE Cart SET quantity = ? where itemid = ? and shopname = ? and userid = ?",
+      [quantity, itemid, shopname, req.user.id],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          res.status(400).send(error.message);
+        } else {
+          res.status(200).send("Item updated successfully in Cart");
+        }
+      }
+    );
+  });
+
 router.get('/cart/items', verify, (req, res) => {
     console.log("in get cart items.");
     connection.query(

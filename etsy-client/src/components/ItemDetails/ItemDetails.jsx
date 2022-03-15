@@ -6,8 +6,13 @@ import { useLocation } from 'react-router-dom';
 import Appbar from "../Appbar/Appbar";
 import { Link } from "react-router-dom";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useDispatch } from "react-redux";
+import { useHistory } from 'react-router';
+import addItemToCart from "../../actions/cartAction";
 
 export default function ItemDetails(props) {
+    const dispatch = useDispatch();
+    const hist = useHistory();
     const { itemId, shopName } = useParams();
     const location = useLocation();
     const itemDetails = location.state.item;
@@ -19,9 +24,22 @@ export default function ItemDetails(props) {
         price: itemDetails.price,
         available_quantity: itemDetails.available_quantity,
         category: itemDetails.category,
-
+        shopname: itemDetails.shopname
     });
-    let token = sessionStorage.getItem('token');
+
+    const [counter, setCounter] = useState(1);
+
+    let incrementCounter = () => setCounter(counter + 1);
+    let decrementCounter = () => setCounter(counter - 1);
+  
+    if (counter <= 1) {
+      decrementCounter = () => setCounter(1);
+    }
+  
+    if (counter >= item.available_quantity) {
+      incrementCounter = () => setCounter(counter);
+    }
+
     const [isFav, setIsFav] = useState(false);
     useEffect(
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,22 +66,8 @@ export default function ItemDetails(props) {
 
 
     let addToCart = async () => {
-        let cartItem = {
-            itemid: itemId,
-            shopname: shopName,
-            quantity: 1
-        }
-        let res = await fetch(`${backendServer}/api/cart/additem`, {
-            method: 'POST',
-            headers: {
-                'auth-token': token,
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            body: JSON.stringify(cartItem),
-        })
-        if(res.status === 200) {
-        }
+        dispatch(addItemToCart(item, counter));
+        hist.push("/cart")
     }   
 
     let markFav = async () => {
@@ -138,6 +142,26 @@ export default function ItemDetails(props) {
             </Col>
         </Row>
         <br></br>
+        <Button
+                style={{ borderColor: "#e7e7e7" }}
+                variant="light"
+                onClick={decrementCounter}
+              >
+                -
+              </Button>
+              <Button
+                style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
+                variant="light"
+              >
+                {counter}
+              </Button>
+              <Button
+                style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
+                variant="light"
+                onClick={incrementCounter}
+              >
+                +
+              </Button>
         <Button onClick = {addToCart}>Add to cart</Button>
         </Container>
     </div>
