@@ -1,7 +1,7 @@
 {
-  "name": "grubhub-server",
+  "name": "etsy-server",
   "version": "1.0.0",
-  "description": "Grubhub Server side",
+  "description": "etsy Server side",
   "main": "index.js",
   "scripts": {
     "test": "mocha || true",

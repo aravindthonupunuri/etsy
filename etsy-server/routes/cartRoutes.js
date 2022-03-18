@@ -10,7 +10,7 @@ router.post('/cart/additem', verify, (req, res) => {
         [uuidv4(), itemid, req.user.id, quantity, shopname],
         (error, result) =>{
             if(error) {
-                console.log(error)
+                // console.log(error)
                 res.status(400).send(error.message)
             } else {
                 res.status(200).send("Item successfully added to Cart");
@@ -27,7 +27,7 @@ router.put("/cart/updateitem", verify, (req, res) => {
       [quantity, itemid, shopname, req.user.id],
       (error, result) => {
         if (error) {
-          console.log(error);
+          // console.log(error);
           res.status(400).send(error.message);
         } else {
           res.status(200).send("Item updated successfully in Cart");
@@ -37,13 +37,13 @@ router.put("/cart/updateitem", verify, (req, res) => {
   });
 
 router.get('/cart/items', verify, (req, res) => {
-    console.log("in get cart items.");
+    // console.log("in get cart items.");
     connection.query(
         "SELECT * FROM Cart where userid = ?", 
         [req.user.id],
         (error, result) =>{
             if(error) {
-                console.log(error)
+                // console.log(error)
                 res.status(400).send(error.message)
             } else {
                 res.send(result);
