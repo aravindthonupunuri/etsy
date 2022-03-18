@@ -79,7 +79,7 @@ export default function ItemComponent(props) {
     }
 
     return <Card onClick={redirectToItemDetails} style={{ width: '300px', cursor: 'pointer' }}>
-        <div class="img-container" style={{ position: 'relative' }}>
+        <div style={{ position: 'relative' }}>
             <FavoriteIcon 
                 style={favStyle}
                 onClick={
@@ -94,25 +94,9 @@ export default function ItemComponent(props) {
                 } />
             <Card.Img variant="top" src={homeItem.itemimage} style={{ width: '300px', height: '150px', top: '0px' }} />
         </div>
-        {/* <Card.Img variant="top" src={homeItem.itemimage} style={{ width: '300px', height: '150px' }} /> */}
         <Card.Body>
             <Card.Title>{homeItem.itemname}</Card.Title>
-            <span>
-                {/* <FavoriteIcon
-                    style={favStyle}
-                    onClick={
-                        (event) => {
-                            !isFav ?
-                                markFav()
-                                :
-                                unMarkFav()
-                            event.stopPropagation()
-                        }
-
-                    } /> */}
-            </span>
             <Card.Text>
-                {console.log("hi.. " + currency.currency)}
                 {homeItem.price} {" "} {currency.currency}
             </Card.Text>
         </Card.Body>

@@ -11,14 +11,11 @@ import Slider from '@mui/material/Slider';
 
 require("./Home.css")
 
-function valuetext(value) {
-  return `${value}$`;
-}
-
 export default function Home() {
   
   let [homeItems, setHomeItems] = useState([]);
   let [filtItems, filteredHomeItems] = useState([]);
+  let [checked, setChecked] = useState(false);
   let token = sessionStorage.getItem('token');
   const [sortType, setSortType] = useState("");
 
@@ -72,6 +69,20 @@ export default function Home() {
     filteredHomeItems(res)
   }
 
+  function removeOutOfStock(e) {
+    if(!checked) {
+      let res = homeItems.filter(
+        homeItem => homeItem.available_quantity !== 0
+      )
+      filteredHomeItems(res)
+      setChecked(true)
+    }
+    else {
+      filteredHomeItems(homeItems)
+      setChecked(false)
+    }
+  }
+
   function handlePriceRange() {
     let min = value[0];
     let max = value[1];
@@ -102,11 +113,14 @@ export default function Home() {
                   value={value}
                   onChange={handleChange}
                   valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
                 />
               </Box>
               <Button onClick = {handlePriceRange}>Price Filter</Button>
-              
+              <br>
+              </br>
+              <input type="checkbox" onChange={(e) => removeOutOfStock(e)}>                
+              </input>
+              <span>  select only available items</span>
             </Col>
             <Col sm={6}></Col>
             <Col sm={3}>

@@ -26,10 +26,10 @@ export default function ItemDetails(props) {
         category: itemDetails.category,
         shopname: itemDetails.shopname
     });
-
+    
     const [counter, setCounter] = useState(1);
     const [outOfStock, setOutOfStock] = useState("");
-
+    if(item.available_quantity === 0 && outOfStock === "") setOutOfStock("Out of Stock")
     let incrementCounter = () => {
         if(counter <= item.available_quantity) {
             setCounter(counter + 1);
@@ -171,11 +171,6 @@ export default function ItemDetails(props) {
             </div> :
             <Button onClick={addToCart}>Add to cart</Button>
             }
-            {/* <div style ={{fontSize: '30px', color: 'red'}}>
-            {outOfStock}
-            </div>
-            <br></br>
-            <Button onClick={addToCart}>Add to cart</Button> */}
         </Container>
     </div>
 }
