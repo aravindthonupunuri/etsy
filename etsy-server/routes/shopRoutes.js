@@ -120,6 +120,24 @@ router.post('/shop/add/item', verify, (req, res) => {
     )
 })
 
+router.put('/shop/update/itemQuantity', verify, (req, res) => {
+    const { updated_quantity, id } = req.body;
+
+    let sql = "UPDATE Items SET available_quantity = ? where id = ?";
+
+    connection.query(
+        sql, [updated_quantity, id],
+        (error, result) =>{
+            if(error) {
+                console.log(error)
+                res.status(400).send(error.message)
+            } else {
+                console.log("updated item quantity.")
+                res.status(200).send("Item updated");
+            }
+        }
+    )
+})
 
 router.put('/shop/update/item', verify, (req, res) => {
     const { id, itemname, itemImageFileUrl, description, price, available_quantity, category} = req.body;

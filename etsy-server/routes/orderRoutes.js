@@ -25,7 +25,6 @@ router.post("/order/addItems", verify, (req, res) => {
     const { orderId, items } = req.body;
     var datetime = new Date();
     let error = false;
-//   console.log(items)
     items.forEach((item) => {
       var orderLineitemId = uuidv4();
       connection.query(
@@ -42,14 +41,8 @@ router.post("/order/addItems", verify, (req, res) => {
         ],
         (err, result) => {
           if (err) {
-            // console.log(err);
             if(!error) error = true;
-            // res.status(400).send(err.message);
           }
-        //    else {
-        //     // console.log(result);
-        //     res.send("Values Inserted");
-        //   }
         }
       );
     });
@@ -73,12 +66,8 @@ router.post("/order/addItems", verify, (req, res) => {
       (err, result) => {
         debugger;
         if (err) {
-            console.log("error");
-          console.log(err);
           res.status(400).send(err.message);
         } else {
-            console.log("success");
-          console.log(result);
           res.send(result);
         }
       }

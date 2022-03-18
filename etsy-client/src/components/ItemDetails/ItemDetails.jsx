@@ -30,21 +30,17 @@ export default function ItemDetails(props) {
     const [counter, setCounter] = useState(1);
     const [outOfStock, setOutOfStock] = useState("");
 
-    let incrementCounter = () => setCounter(counter + 1);
-    let decrementCounter = () => {
-        setCounter(counter - 1);
-        setOutOfStock("");
-    }
-
-    if (counter <= 1) {
-        decrementCounter = () => setCounter(1);
-    }
-
-    if (counter > item.available_quantity) {
-        incrementCounter = () => {
-            // setOutOfStock("Out of stock");
-            setCounter(counter);            
+    let incrementCounter = () => {
+        if(counter <= item.available_quantity) {
+            setCounter(counter + 1);
+            if(counter + 1 > item.available_quantity) setOutOfStock("Out of Stock")
         }
+    }
+    let decrementCounter = () => {
+        if(counter > 1) {
+            setCounter(counter - 1);
+            setOutOfStock("");
+        } 
     }
 
     const [isFav, setIsFav] = useState(false);
