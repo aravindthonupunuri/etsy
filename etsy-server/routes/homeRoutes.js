@@ -8,7 +8,6 @@ router.get('/items', verify, (req, res) => {
             if(err) {
                 console.log(err);
             } else {
-                console.log("in get items")
                 res.send(result);
             }
         }
@@ -22,7 +21,6 @@ router.get('/item/:itemId', verify, (req, res) => {
             if(err) {
                 console.log(err);
             } else {
-                console.log("in get items")
                 res.send(result[0]);
             }
         }

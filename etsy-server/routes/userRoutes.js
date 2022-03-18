@@ -18,7 +18,6 @@ router.post('/register', async (req, res) => {
         [uuidv4(), name, emailId, hashPassword, null, null, null, null, null, null, null],
         (error, result) =>{
             if(error) {
-                console.log(error)
                 res.status(400).send(error.message)
             } else {
                 res.status(200).send("User successfully registered");
@@ -38,7 +37,6 @@ router.post('/login', (req, res) => {
         {
           if(result.length > 0) 
           {
-            console.log(result);
             const comparision = await bcrypt.compare(password, result[0].password);
             if(comparision)
             {

@@ -105,8 +105,6 @@ router.post('/upload/shop', verify, (req, res) => {
 
 router.post('/shop/add/item', verify, (req, res) => {
     const { itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
-    // console.log("category is ..." + categoryid);
-    // console.log("itemname is ..." + itemname);
     console.log("itemimage is ..." + itemImageFileUrl);
     connection.query(
         "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
