@@ -45,7 +45,7 @@ export default function Appbar(props) {
             () => hist.replace("/cart")
           }>Cart</Nav.Link>
           <Nav.Link onClick={
-            () => hist.replace("/orders")
+            () => hist.replace("/mypurchases")
           }>Orders</Nav.Link>
           <Nav.Link>
             <FaIcons.FaSignOutAlt />

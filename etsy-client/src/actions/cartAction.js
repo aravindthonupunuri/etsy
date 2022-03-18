@@ -1,6 +1,6 @@
 import backendServer from '../webconfig';
 
-export default function addItemToCart(item, quantity) {
+export function addItemToCart(item, quantity) {
     let token = sessionStorage.getItem("token");
     console.log("shop name is " + item)
     console.log(item)
@@ -36,6 +36,7 @@ export default function addItemToCart(item, quantity) {
             });
             console.log("Item added to cart table");
           }
+          debugger;
           if(response.ok) {
             dispatch(
                 {
@@ -46,9 +47,24 @@ export default function addItemToCart(item, quantity) {
                 imageUrl: item.itemimage,
                 price: item.price,
                 availableQuantity: item.available_quantity,
-                requestedQuantity: quantity}
+                requestedQuantity: quantity,
+                shopname: item.shopname,
+              }
                }
                )
           }                     
     }
 }
+
+export const removeFromCart = (id) => (dispatch) => {
+  dispatch({
+    type: 'removeItemFromCart',
+    payload: id,
+  });
+};
+
+export const clearCart = () => (dispatch) => {
+  dispatch({
+    type: 'clearCart',
+  });
+};

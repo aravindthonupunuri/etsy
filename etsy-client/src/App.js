@@ -43,7 +43,7 @@ function App() {
         <Route path="/cart">
           <Cart />
         </Route>   
-        <Route path="/orders">
+        <Route path="/mypurchases">
           <Orders />
         </Route>     
         <Route path="/updateprofile">
