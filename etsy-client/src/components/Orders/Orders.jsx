@@ -23,8 +23,6 @@ function Orders() {
     if (response.ok) {
       let result = await response.json();
       setOrders(result);
-      console.log(result);
-      console.log(orders);
     }
   };
 

@@ -2,14 +2,11 @@ import backendServer from '../webconfig';
 
 export function addItemToCart(item, quantity) {
     let token = sessionStorage.getItem("token");
-    console.log("shop name is " + item)
-    console.log(item)
     let cartItem = {
       itemid: item.id,
       shopname: item.shopname,
       quantity: quantity,
     };
-      console.log("add item to cart 1")
     let response = "";
     return async (dispatch, getState) => {
         let cartItems = getState().cartState.cartItems;
@@ -23,7 +20,6 @@ export function addItemToCart(item, quantity) {
               mode: "cors",
               body: JSON.stringify(cartItem),
             });
-            console.log("Item updated in cart table");
           } else {
             response = await fetch(`${backendServer}/api/cart/additem`, {
               method: "POST",
@@ -34,7 +30,6 @@ export function addItemToCart(item, quantity) {
               mode: "cors",
               body: JSON.stringify(cartItem),
             });
-            console.log("Item added to cart table");
           }
           if(response.ok) {
             dispatch(

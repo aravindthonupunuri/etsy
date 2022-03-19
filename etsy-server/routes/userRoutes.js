@@ -9,7 +9,6 @@ var connection = db.connection;
 
 router.post('/register', async (req, res) => {
     const {name, emailId, password} = req.body;
-    // console.log(req.body);
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
@@ -27,7 +26,6 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', (req, res) => {
-  // console.log("login");
     const {emailId, password} = req.body;
     connection.query('SELECT * FROM User WHERE emailId = ?',[emailId], async function (error, result) {
         if (error) 
@@ -42,7 +40,6 @@ router.post('/login', (req, res) => {
             if(comparision)
             {
                 const token = jwt.sign({id : result[0].id}, process.env.Token_Secret);
-                // console.log("login success");
                 res.header('auth-token', token).status(200).send(token);
             }
             else
@@ -57,7 +54,6 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/profile', verify, (req, res) => {
-    // console.log(req.params);
     connection.query(
         "SELECT * from User user where user.id = ?", [req.user.id],
         (err, result) => {
@@ -72,7 +68,6 @@ router.get('/profile', verify, (req, res) => {
 
 router.put('/update/profile', verify, (req, res) => {
    const {emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
-  //  console.log(req.user.id);
    let sql = "UPDATE User SET emailId = ?, username = ?, profilePicture = ?, phonenumber = ?, gender = ?, city = ?, country = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
    connection.query(
     sql, [emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about, req.user.id],
