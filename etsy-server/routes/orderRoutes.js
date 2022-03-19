@@ -51,7 +51,6 @@ router.post("/order/addItems", verify, (req, res) => {
   });
 
   router.get("/user/orders", verify, (req, res) => {
-      console.log("in user orders")
     connection.query(
       `Select o.id, o.total, oi.itemid, oi.shopname, oi.price, oi.quantity, oi.createdTime, i.itemimage, i.itemname
       from 

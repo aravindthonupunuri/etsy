@@ -21,7 +21,7 @@ export default function Home() {
 
   const [value, setValue] = useState([0, 1000]);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
   };
 
@@ -30,6 +30,40 @@ export default function Home() {
     quantity: "available_quantity",
     salescount: "salescount",
   };
+
+  const setSalesCount = async (filteredItems) => {
+    let shops = {};
+    for (let index = 0; index < filteredItems.length; index++) {
+      let item = filteredItems[index];
+      if (item.shopname in shops) {
+        item.salescount = shops[item.shopname];
+      } else {
+        let salescount = await calculateSalescount(item.shopname);
+        shops[item.shopname] = salescount;
+        item.salescount = salescount;
+      }
+    }
+  };
+
+  const calculateSalescount = async (shopname) => {
+    const token = sessionStorage.getItem("token");
+    let response = await fetch(`${backendServer}/api/shop/${shopname}`, {
+      method: "GET",
+      headers: {
+        "auth-token": token,
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+    });
+    let result = await response.json();
+    let salescount = result[0].salescount;
+    return salescount;
+  };
+
+  useEffect(() => {
+    setSalesCount(filtItems);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtItems]);
 
   useEffect(() => {
     const sortItems = (type) => {

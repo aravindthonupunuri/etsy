@@ -13,7 +13,7 @@ require('./Shop.css');
 
 export default function Shop() {
     const [shopimage, setShopImage] = useState(null);
-    const [salescount, setSalescount] = useState(0);
+    const [salescount] = useState(0);
     const [nameOfShop, setShopName] = useState("");
     const [shopItems, setShopItems] = useState([]);
     const [shopDetails, setShopDetails] = useState({});
@@ -87,8 +87,6 @@ export default function Shop() {
     );
 
     const checkAndCreateShop = async () => {
-        // let downloadURL = await getFirebaseImage(shopimage, `/images/shop`)
-        debugger;
         const obj = {
             shopname: nameOfShop,
             salescount: salescount
@@ -166,7 +164,7 @@ export default function Shop() {
                                 <h2> {shopname} </h2>
                             </Row>
                             <Row>
-                                {salescount} sales
+                                {shopDetails.salescount} sales
                             </Row>
                             <Row>
                                 <input

@@ -24,7 +24,8 @@ export default function ItemDetails(props) {
         price: itemDetails.price,
         available_quantity: itemDetails.available_quantity,
         category: itemDetails.category,
-        shopname: itemDetails.shopname
+        shopname: itemDetails.shopname,
+        salescount: itemDetails.salescount
     });
     
     const [counter, setCounter] = useState(1);
@@ -139,6 +140,7 @@ export default function ItemDetails(props) {
                     <p>
                         {item.itemname}
                     </p>
+                    <p> sales count {itemDetails.salescount}</p>
                     <p>
                         {item.available_quantity}
                     </p>

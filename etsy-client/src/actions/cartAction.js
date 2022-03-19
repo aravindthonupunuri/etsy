@@ -36,7 +36,6 @@ export function addItemToCart(item, quantity) {
             });
             console.log("Item added to cart table");
           }
-          debugger;
           if(response.ok) {
             dispatch(
                 {

@@ -4,8 +4,6 @@ const verify = require('./verifyToken');
 const { v4: uuidv4 } = require('uuid');
 
 router.get('/shop', verify, async (req, res) => {
-    console.log(req.user);
-    console.log("in get shops");
     try {
         let results = await getShops();
         let result = results.filter(
@@ -18,16 +16,12 @@ router.get('/shop', verify, async (req, res) => {
 })
 
 router.get('/shop/:shopName', verify, async (req, res) => {
-    console.log(req.user);
     const {shopName} = req.params;
-    console.log("in get shops shopName " + shopName);
     try {
         let results = await getShops();
-        console.log(results)
         let result = results.filter(
             res => res.shopname == shopName
         )
-        console.log(result)
         res.status(200).send(result);
     } catch (error) {
         res.status(400).send(error.message);
@@ -35,9 +29,7 @@ router.get('/shop/:shopName', verify, async (req, res) => {
 })
 
 router.get('/shopOwnerProfile/:shopOwnerId', verify, async (req, res) => {
-    console.log(req.user);
     const {shopOwnerId} = req.params;
-    console.log("in get shops shopName " + shopOwnerId);
     connection.query(
         "SELECT * from User user where user.id = ?", [shopOwnerId],
         (err, result) => {
@@ -67,7 +59,6 @@ getShops = () => {
 
 router.post('/upload/shop', verify, (req, res) => {
     const {shopname, shopimage, salescount} = req.body;
-    console.log(req.user);
 
     try {
         getShops().then( (result) => {
@@ -82,7 +73,6 @@ router.post('/upload/shop', verify, (req, res) => {
                     [shopname, shopimage, req.user.id, salescount],
                     (error, results) =>{
                         if(error) {
-                            console.log(error);
                             res.status(400).send(error.message);
                         } else {
                             res.status(200).send(results);
@@ -105,13 +95,11 @@ router.post('/upload/shop', verify, (req, res) => {
 
 router.post('/shop/add/item', verify, (req, res) => {
     const { itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
-    console.log("itemimage is ..." + itemImageFileUrl);
     connection.query(
         "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
         [uuidv4(), itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname],
         (error, result) =>{
             if(error) {
-                console.log(error)
                 res.status(400).send(error.message)
             } else {
                 res.status(200).send("Item successfully added to shop");
@@ -129,15 +117,35 @@ router.put('/shop/update/itemQuantity', verify, (req, res) => {
         sql, [updated_quantity, id],
         (error, result) =>{
             if(error) {
-                console.log(error)
                 res.status(400).send(error.message)
             } else {
-                console.log("updated item quantity.")
                 res.status(200).send("Item updated");
             }
         }
     )
 })
+
+router.put("/shop/updatesalescount", verify, (req, res) => {
+    const { salesCountMap } = req.body;
+  let error = false;
+    salesCountMap.forEach((mapping) => {
+      connection.query(
+        "UPDATE Shop SET salescount = ? where shopname = ?",
+        [mapping.salescount, mapping.shopname],
+        (err, result) => {
+          if (err) {
+            error = true;
+          }
+        }
+      );
+    });
+  
+    if (error) {
+      res.status(400).send(err.message);
+    } else {
+      res.send("Sales count updated");
+    }
+  });
 
 router.put('/shop/update/item', verify, (req, res) => {
     const { id, itemname, itemImageFileUrl, description, price, available_quantity, category} = req.body;
@@ -145,13 +153,12 @@ router.put('/shop/update/item', verify, (req, res) => {
     let sql = "UPDATE Items SET itemname = ?, itemimage = ?, description = ?, price = ?, category = ?, available_quantity = ? where id = ?";
 
     connection.query(
-        sql, [itemname, itemImageFileUrl, description, price, available_quantity, category, id],
+        sql, [itemname, itemImageFileUrl, description, price, category, available_quantity, id],
         (error, result) =>{
             if(error) {
                 console.log(error)
                 res.status(400).send(error.message)
             } else {
-                console.log("updated item.")
                 res.status(200).send("Item updated");
             }
         }
@@ -164,7 +171,7 @@ router.get('/shop/items/:shopname', verify, (req, res) => {
     connection.query(
         "SELECT * FROM Items where shopname = ?" , [shopname] , (err, result) =>{
             if(err) {
-                console.log(err);
+                res.status(400).send(err);
             } else {
                 res.send(result);
             }
@@ -180,10 +187,8 @@ router.put("/shop/uploadImage", verify, (req, res) => {
       [shopimage, shopname],
       (error, result) => {
         if (error) {
-          console.log(error);
           res.status(400).send(error.message);
         } else {
-          console.log("uploaded image" + result);
           res.status(200).send("Image uploaded");
         }
       }
