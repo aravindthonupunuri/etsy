@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { connection } = require('../dbconfig');
+const { connection } = require('../dbConfig');
 const verify = require('./verifyToken');
 
 // router.get('/items', verify, (req, res) => {

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const verify = require('./verifyToken');
 
-const db = require('../dbconfig');
+const db = require('../dbConfig');
 var connection = db.connection;
 
 router.post('/register', async (req, res) => {

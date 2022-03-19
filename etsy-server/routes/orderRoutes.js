@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { connection } = require('../dbconfig');
+const { connection } = require('../dbConfig');
 const verify = require('./verifyToken');
 const { v4: uuidv4 } = require('uuid');
 
