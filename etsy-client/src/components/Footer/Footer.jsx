@@ -20,14 +20,15 @@ export default function Footer() {
   }, [])
 
   return (
-    <div>
     <div style = {{
      display: 'flex',   
      color: 'white',
      backgroundColor: 'green',
      height: '50px',
-     marginTop: '55px',
-     padding: '10px'
+     width: '100%',
+     padding: '10px',
+     position:'fixed',
+     bottom:'0'
      }}>
          
          <img style={{ width: '2%' }} src={usa} alt='no country' />
@@ -46,7 +47,6 @@ export default function Footer() {
          </Form.Select>  
          </p>
        
-    </div>
     </div>
 
   );
