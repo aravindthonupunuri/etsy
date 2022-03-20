@@ -152,8 +152,9 @@ export default function Home() {
               <Button onClick = {handlePriceRange}>Price Filter</Button>
               <br>
               </br>
+              <br></br>
               <input type="checkbox" onChange={(e) => removeOutOfStock(e)}>                
-              </input>
+              </input>              
               <span>  select only available items</span>
             </Col>
             <Col sm={6}></Col>

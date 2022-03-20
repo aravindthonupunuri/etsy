@@ -83,8 +83,6 @@ router.put('/update/profile', verify, (req, res) => {
 
 router.put("/uploadProfilePic", verify, (req, res) => {
   const {image} = req.body;
-  // console.log(req.body);
-
   connection.query(
       "UPDATE User SET profilePicture = ? where id = ?",
       [image, req.user.id],
@@ -100,7 +98,6 @@ router.put("/uploadProfilePic", verify, (req, res) => {
 
 router.post("/add/favourite", verify, (req, res) => {
   const {itemId} = req.body;
-  // console.log(req.body);
   connection.query(
       "INSERT into Favourites(id, itemId, userId) values(?,?,?)",
       [uuidv4(), itemId, req.user.id],

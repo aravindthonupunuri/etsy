@@ -9,12 +9,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
 import { addItemToCart } from "../../actions/cartAction";
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { useSelector } from "react-redux";
 
-export default function ItemDetails(props) {
+export default function ItemDetails() {
     const dispatch = useDispatch();
     const hist = useHistory();
-    const { itemId, shopName } = useParams();
+    const { shopName } = useParams();
     const location = useLocation();
+    const currency = useSelector(state => state.currencyState)
     const itemDetails = location.state.item;
     let [item] = useState({
         id: itemDetails.id,
@@ -27,21 +30,21 @@ export default function ItemDetails(props) {
         shopname: itemDetails.shopname,
         salescount: itemDetails.salescount
     });
-    
+
     const [counter, setCounter] = useState(1);
     const [outOfStock, setOutOfStock] = useState("");
-    if(item.available_quantity === 0 && outOfStock === "") setOutOfStock("Out of Stock")
+    if (item.available_quantity === 0 && outOfStock === "") setOutOfStock("Out of Stock")
     let incrementCounter = () => {
-        if(counter <= item.available_quantity) {
+        if (counter <= item.available_quantity) {
             setCounter(counter + 1);
-            if(counter + 1 > item.available_quantity) setOutOfStock("Out of Stock")
+            if (counter + 1 > item.available_quantity) setOutOfStock("Out of Stock")
         }
     }
     let decrementCounter = () => {
-        if(counter > 1) {
+        if (counter > 1) {
             setCounter(counter - 1);
             setOutOfStock("");
-        } 
+        }
     }
 
     const [isFav, setIsFav] = useState(false);
@@ -59,7 +62,7 @@ export default function ItemDetails(props) {
             })
             let favItems = await res.json();
             for (let i = 0; i < favItems.length; i++) {
-                if (favItems[i].itemId === props.id) {
+                if (favItems[i].itemId === item.id) {
                     setIsFav(true);
                     break;
                 }
@@ -83,7 +86,7 @@ export default function ItemDetails(props) {
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
-            body: JSON.stringify({ itemId: props.id }),
+            body: JSON.stringify({ itemId: item.id }),
         })
         if (res.status) {
             setIsFav(true)
@@ -92,7 +95,7 @@ export default function ItemDetails(props) {
 
     let unMarkFav = async () => {
         const token = sessionStorage.getItem('token');
-        let res = await fetch(`${backendServer}/api/user/favourites/${props.id}`, {
+        let res = await fetch(`${backendServer}/api/user/favourites/${item.id}`, {
             method: 'DELETE',
             headers: {
                 'auth-token': token,
@@ -114,11 +117,17 @@ export default function ItemDetails(props) {
         <Appbar />
         <Container>
             <Row>
-                <Col>
-                    <img src={item.itemimage} alt="alt" style={{ width: '40rem' }} />
+                <Col sm = {5}>
+                    <img src={item.itemimage} alt="alt" style={{ width: '500px', height: '500px' }} />
                 </Col>
-                <Col>
-                    <FavoriteIcon
+                <Col sm = {1}>
+                <button style = {{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '50%',
+                        marginTop: '10px'
+                    }}>
+                    <FavoriteBorderIcon
                         style={favStyle}
                         onClick={
                             (event) => {
@@ -128,51 +137,51 @@ export default function ItemDetails(props) {
                                     unMarkFav()
                                 event.stopPropagation()
                             }
-
                         } />
+                    </button>                
                 </Col>
                 <Col>
-                    <p>
+                    <p style = {{textAlign: 'right'}}>
                         <Link to={`/shop/${shopName}`}>
                             {shopName}
                         </Link>
+                        <p> sales count {itemDetails.salescount} </p>
                     </p>
-                    <p>
-                        {item.itemname}
-                    </p>
-                    <p> sales count {itemDetails.salescount}</p>
-                    <p>
-                        {item.available_quantity}
-                    </p>
+                    <p style={{fontSize: '30px'}}> {item.itemname} </p>
+                    
+                    <span style={{fontWeight: 'bold', fontSize: '20px'}}>price is {item.price} {" "} {currency.currency}</span>
+                    <br></br>
+                    <br></br>
+                    <p style={{fontSize: '20px'}}> Description : {item['description']}</p>
+                    <br></br>
+                    <Button
+                        style={{ borderColor: "#e7e7e7" }}
+                        variant="light"
+                        onClick={decrementCounter}
+                    >
+                        -
+                    </Button>
+                    <Button
+                        style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
+                        variant="light"
+                    >
+                        {counter}
+                    </Button>
+                    <Button
+                        style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
+                        variant="light"
+                        onClick={incrementCounter}
+                    >
+                        +
+                    </Button>
+                    {outOfStock !== "" ?
+                        <div style={{ fontSize: '30px', color: 'red' }}>
+                            {outOfStock}
+                        </div> :
+                        <Button onClick={addToCart} style = {{marginLeft: '15px'}}>Add to cart</Button>
+                    }
                 </Col>
-            </Row>
-            <br></br>
-            <Button
-                style={{ borderColor: "#e7e7e7" }}
-                variant="light"
-                onClick={decrementCounter}
-            >
-                -
-            </Button>
-            <Button
-                style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
-                variant="light"
-            >
-                {counter}
-            </Button>
-            <Button
-                style={{ borderColor: "#e7e7e7", marginLeft: ".2rem" }}
-                variant="light"
-                onClick={incrementCounter}
-            >
-                +
-            </Button>
-            {outOfStock !== "" ? 
-            <div style ={{fontSize: '30px', color: 'red'}}>
-            {outOfStock}
-            </div> :
-            <Button onClick={addToCart}>Add to cart</Button>
-            }
+            </Row>   
         </Container>
     </div>
 }

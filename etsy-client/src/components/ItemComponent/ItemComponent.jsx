@@ -2,11 +2,12 @@
 import { Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import backendServer from '../../webconfig';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 
 export default function ItemComponent(props) {
+    let [over, setOver] = useState(false);
     const currency = useSelector(state => state.currencyState)
     const history = useHistory();
     let homeItem = props.item
@@ -63,9 +64,9 @@ export default function ItemComponent(props) {
         }
     }
 
-    let favStyle = { position: 'absolute', top: '5px', left: '270px' };
+    let favStyle = {};
     if (isFav) {
-        favStyle = { color: 'red', position: 'absolute', top: '5px', left: '270px' }
+        favStyle = { color: 'red' }
     }
 
     let redirectToItemDetails = () => {
@@ -78,27 +79,37 @@ export default function ItemComponent(props) {
         })
     }
 
-    return <Card onClick={redirectToItemDetails} style={{ width: '300px', cursor: 'pointer' }}>
-        <div style={{ position: 'relative' }}>
-            <FavoriteIcon 
-                style={favStyle}
-                onClick={
-                    (event) => {
-                        !isFav ?
-                            markFav()
-                            :
-                            unMarkFav()
-                        event.stopPropagation()
-                    }
+    return <Card onClick={redirectToItemDetails} style={{ width: '300px', cursor: 'pointer' }} onMouseEnter= {() => setOver(true)} onMouseLeave={() => setOver(false)}>
+            <div>
+                {over ?
+                    <button
+                        style={{
+                            position: 'absolute',
+                            width: '40px', height: '40px', borderRadius: '50%', top: '5px', left: '250px'
+                        }}>
+                        <FavoriteBorderIcon
+                            style={favStyle}
+                            onClick={
+                                (event) => {
+                                    !isFav ?
+                                        markFav()
+                                        :
+                                        unMarkFav()
+                                    event.stopPropagation()
+                                }
 
-                } />
-            <Card.Img variant="top" src={homeItem.itemimage} style={{ width: '300px', height: '150px', top: '0px' }} />
-        </div>
-        <Card.Body>
-            <Card.Title>{homeItem.itemname}</Card.Title>
-            <Card.Text>
-                {homeItem.price} {" "} {currency.currency}
-            </Card.Text>
-        </Card.Body>
-    </Card>
+                            }
+                        />
+                    </button> :
+                    <div> </div>
+                }
+                <Card.Img variant="top" src={homeItem.itemimage} style={{ height: '150px', top: '0px' }} />
+            </div>
+            <Card.Body>
+                <Card.Title>{homeItem.itemname}</Card.Title>
+                <Card.Text>
+                    {homeItem.price} {" "} {currency.currency}
+                </Card.Text>
+            </Card.Body>
+        </Card>
 }

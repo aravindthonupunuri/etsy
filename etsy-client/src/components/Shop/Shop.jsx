@@ -164,7 +164,7 @@ export default function Shop() {
                                 <h2> {shopname} </h2>
                             </Row>
                             <Row>
-                                {shopDetails.salescount} sales
+                                <div> Sales count is {shopDetails.salescount} </div>
                             </Row>
                             <Row>
                                 <input

@@ -33,15 +33,15 @@ function Orders() {
     orderCards = orders.map((order) => (
       <Card style={{ width: "70rem", margin: "2%" }}>
         <Card.Body>
-          <Row style={{ fontFamily: "sans-serif", fontSize: "12px" }}>
+          <Row style={{ fontSize: "12px" }}>
             <Col align="left">
-              <div>ORDER PLACED {order.createdTime}</div>
+              <div>Order placed at {order.createdTime}</div>
             </Col>
             <Col>
               <div></div>
             </Col>
             <Col align="right">
-              <div>ORDER # {order.id}</div>
+              <div>Order id is {order.id}</div>
             </Col>
           </Row>
           <Row style={{ fontFamily: "sans-serif", fontSize: "14px" }}>
@@ -84,11 +84,7 @@ function Orders() {
     <div>
       <Appbar />
       <Container className="justify-content">
-        <Row>
-          <Col xs={3}>
-            <h3 style={{ marginRight: "70px" }}>Your Orders</h3>
-          </Col>
-        </Row>
+        <h3 style={{ marginRight: "70px" }}>My purchases</h3>
         {message}
         {orderCards}
       </Container>

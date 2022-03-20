@@ -10,7 +10,7 @@ require("./Cart.css");
 
 function Cart() {
   const cart = useSelector((state) => state.cartState);
-  const currencyState = useSelector((state) => state.currencyState);
+  const currency = useSelector(state => state.currencyState)
   const { cartItems } = cart;
 
   const dispatch = useDispatch();
@@ -140,9 +140,8 @@ function Cart() {
           <div style={{ paddingTop: "7px" }}>{cartItems[i].name}</div>
         </td>
         <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>
-            {currencyState.currency}
-            {cartItems[i].price}
+          <div style={{ paddingTop: "7px" }}>          
+            {cartItems[i].price} {" "} {currency.currency}
           </div>
         </td>
         <td style={{ position: "relative" }}>
@@ -151,9 +150,8 @@ function Cart() {
           </div>
         </td>
         <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>
-            {currencyState.currency}
-            {cartItems[i].price * cartItems[i].requestedQuantity}
+          <div style={{ paddingTop: "7px" }}>            
+            {cartItems[i].price * cartItems[i].requestedQuantity} {" "} {currency.currency}
           </div>
         </td>
         <td align="center">
@@ -173,7 +171,7 @@ function Cart() {
       <Container>
         <Row>
           <Col>
-            <h1>Your Cart</h1>
+            <h1>Welcome to your cart</h1>
           </Col>
         </Row>
         <br />
@@ -190,16 +188,18 @@ function Cart() {
             <br />
             <br />
             <div style={{ position: "absolute", right: "330px" }}>
-              <b>Items Total</b>
+              <b>Total</b>
               <b>
-                {currencyState.currency} {totalPrice}
+                 {totalPrice} {" "} {currency.currency}
               </b>
             </div>
           </tbody>
         </Table>
-        <Button variant="success" onClick={(e) => placeOrder(e)}>
+        <div class="col-md-12 text-center">
+        <Button style = {{justify: 'center'}} variant="success" onClick={(e) => placeOrder(e)}>
           Place order
         </Button>
+        </div>
       </Container>
     </div>
   );

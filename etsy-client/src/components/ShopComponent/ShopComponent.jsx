@@ -4,6 +4,8 @@ import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import ItemComponent from '../ItemComponent/ItemComponent';
 import { useParams } from "react-router-dom";
+import noshopimage from '../../images/noshopimage.jpeg';
+import noprofilemage from '../../images/noprofileimage.png';
 
 export default function ShopComponent() {
     const { shopName } = useParams();
@@ -68,6 +70,16 @@ export default function ShopComponent() {
         }, []
     );
 
+    const getProfilePic = () => {
+        if(userDetails.profilePicture == null) return noprofilemage;
+        else return userDetails.profilePicture;
+    }
+    
+    const getShopImage = () => {
+        if(shopDetails.shopimage == null) return noshopimage;
+        else return shopDetails.shopimage;
+    }
+
     let shopname = shopName
     let username = userDetails.username
 
@@ -80,7 +92,7 @@ export default function ShopComponent() {
                     <Col sm={2}>
                         <img
                             style={{ width: "200px", height: "200px" }}
-                            src={shopDetails.shopimage}
+                            src={getShopImage()}
                             alt="alt"
                         />
                     </Col>
@@ -89,12 +101,12 @@ export default function ShopComponent() {
                             <h2> {shopname} </h2>
                         </Row>
                         <Row>
-                            {shopDetails.salescount} sales
+                            <div> Sales count is {shopDetails.salescount} </div>
                         </Row>
                     </Col>
                     <Col sm={2}>
                         <h5> Shop Owner </h5> <br></br>
-                        <img src={userDetails.profilePicture} style={{ width: "100px", height: "100px" }} alt="alt" /> <br></br>
+                        <img src={getProfilePic()} style={{ width: "100px", height: "100px" }} alt="alt" /> <br></br>
                         <h5>{username}</h5>
                     </Col>
                 </Row>
