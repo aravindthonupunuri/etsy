@@ -3,12 +3,12 @@ var chai = require('chai');
 chai.use(require('chai-http'));
 var expect = require('chai').expect;
 ROOT_URL = "http://localhost:3001";
-var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNmMTkzMjM1LWMwOTgtNDczNi05MDFjLTU1N2M3NzU3N2U0NSIsImlhdCI6MTY0NTgzMTIyOH0.PgMTDs5B4E84H0OhEOzE-UsNpRgc3xYu0cm2Dt3VW5s'
-
+var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyNTg0ZjgxLWFlOTItNDcyMS1iOTNkLTgyYWIzMzk0NzYwYyIsImlhdCI6MTY0NzgzNTU2NH0.PSaxCwYvbj9_3O9i53_CouD2lmsDeK4stouxjBwCvZg'
+let shoptoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ5NWZlNDViLTZhZjItNDNiMy1hNTRmLTJjY2NjOTA5Y2M4MCIsImlhdCI6MTY0NzgwNDg0NX0.F2SghwYRHmp83ioVJlEPYdkilK1JEJTeBiqwrxi2tuQ' 
 describe("Post -- Registration of User",()=>{
     const data = {
-        emailId: 'xyz2@gmail.com',
-        name: 'xyz',
+        emailId: 'newuser1@gmail.com',
+        name: 'newuser1',
         password: '1234',
     };
     it("succesfully registered",(done)=>{
@@ -39,11 +39,11 @@ describe("Post -- Registration of User",()=>{
 
 describe("Post -- Login of user",()=>{
     const data = {
-        emailId: 'xyz2@gmail.com',
+        emailId: 'test@gmail.com',
         password: '1234',
     };
     const data1 = {
-        emailId: 'xyz2@gmail.com',
+        emailId: 'test@gmail.com',
         password: '12345',
     };
     it("login with valid credentials",(done)=>{
@@ -98,3 +98,88 @@ describe("Get-- Get home items",()=>{
           });
     })
 })
+
+describe("Create-- create shop",()=>{
+    let data = {
+        "shopname": "shopname",
+        "shopimage": "nameofimage"
+    }
+    let data1 = {
+        "shopname": "newshopname!!!!",
+        "shopimage": "nameofimage"
+    }
+    it("succesfully create a shop for user",(done)=>{
+        chai.request.agent(app)
+        .post("/api/upload/shop")
+        .set('auth-token', token)
+        .send(data1)
+        .then(function (res){
+            expect(res).to.have.status(200);
+            done();
+        })
+        .catch((e) => {
+            done(e);
+          });
+    })
+    it("create shop name with duplicate shop name",(done)=>{
+        chai.request.agent(app)
+        .post("/api/upload/shop")
+        .set('auth-token', shoptoken)
+        .send(data)
+        .then(function (res){
+            expect(res).to.have.status(206);
+            done();
+        })
+        .catch((e) => {
+            done(e);
+          });
+    })
+})
+
+describe("adding item to shop", () => {
+    const payload = {
+      itemname: "itemname",
+      itemimage: "image",
+      description: "description",
+      price: 90,
+      available_quantity: 2,
+      category_id: "category",
+      shopname: "shopname",
+    };
+    it("succesfully adding an item", (done) => {
+      chai.request
+        .agent(app)
+        .post("/api/shop/add/item")
+        .send(payload)
+        .set("auth-token", shoptoken)
+        .then(function (res) {
+          expect(res).to.have.status(200);
+          done();
+        })
+        .catch((e) => {
+          done(e);
+        });
+    });
+    const invalidItem = {
+        itemname: "itemname",
+        itemimage: "image",
+        description: "description",
+        price: 90,
+        available_quantity: 2,
+        category_id: "category"
+      };
+    it("trying to add item without shop name", (done) => {
+      chai.request
+        .agent(app)
+        .post("/api/shop/add/item")
+        .send(invalidItem)
+        .set("auth-token", token)
+        .then(function (res) {
+          expect(res).to.have.status(400);
+          done();
+        })
+        .catch((e) => {
+          done(e);
+        });
+    });
+  });

@@ -24,3 +24,28 @@ config = {
  });
  
  module.exports.connection = connection;
+
+
+// const mysql = require('mysql');
+// const dotenv = require('dotenv');
+// dotenv.config();
+
+// config = {
+//   connectionLimit: 510,
+//   host: 'etsyaws.chglohlvtuj2.us-east-2.rds.amazonaws.com',
+//   user: 'aravind',
+//   password: 'password',
+//   database: 'EtsyDb',
+//   insecureAuth : true
+// }
+
+// const connection = mysql.createPool(config);
+
+// connection.getConnection((err) => {
+//     if(err){
+//       throw 'Error occured: ' + err;
+//     }
+//   });
+
+  
+// module.exports.connection = connection;
