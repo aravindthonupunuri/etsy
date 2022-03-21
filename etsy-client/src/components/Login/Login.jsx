@@ -67,7 +67,7 @@ const Login = () => {
                 </div>
                 <div className="form-group" style={{ marginTop: '5%' }}>
                   <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label>Email address : </label></div>
-                  <input onChange={handleEvent} name="emailId" value={emailId} className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter Email" autoFocus required={true} />
+                  <input data-testid = "emailId" onChange={handleEvent} name="emailId" value={emailId} className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter Email" autoFocus required={true} />
                 </div>
                 <div className="form-group" style={{ marginTop: '5%' }}>
                   <div style={{ textAlign: 'left', fontWeight: 'bolder', padding: '5px' }}><label htmlFor="password">Password : </label></div>

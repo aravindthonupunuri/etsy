@@ -159,7 +159,7 @@ export default function Home() {
             </Col>
             <Col sm={6}></Col>
             <Col sm={3}>
-              <Form.Select style={{ width: '300px', marginBottom: '20px' }}
+              <Form.Select data-testid = "sortType" style={{ width: '300px', marginBottom: '20px' }}
                 onChange={(e) => setSortType(e.target.value)
                 }>
                 <option>Sort by</option>
