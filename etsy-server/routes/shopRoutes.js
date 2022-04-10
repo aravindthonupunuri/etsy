@@ -66,12 +66,16 @@ router.post('/shop/add/item', verify, (req, res) => {
 
 router.put('/shop/update/itemQuantity', verify, (req, res) => {
     const { updated_quantity, id } = req.body;
-
+    console.log("hi")
+    console.log(id)
     Item.findOne({_id: id}, (err, data) => {
+        if(err) console.log(err.message)
+        console.log(data)
         Object.assign(data, {available_quantity: updated_quantity});
+        console.log(data)
         data.save((err, data) => {
-            if(err) res.status(400).send(err.message)
-            else res.status(200).send("Item quantity updated");
+            if(err) {console.log("err"); res.status(400).send(err.message)}
+            else {console.log("suce"); res.status(200).send("Item quantity updated");}
         })
     })
 })
@@ -80,7 +84,7 @@ router.put("/shop/updatesalescount", verify, (req, res) => {
   const { salesCountMap } = req.body;
   let error = false;
     salesCountMap.forEach((mapping) => {
-        Shop.find({shopname: mapping.shopname}, (err, data) => {
+        Shop.findOne({shopname: mapping.shopname}, (err, data) => {
             if(err) error = true;
             else {
                 Object.assign(data, {salescount: mapping.salescount})
@@ -98,10 +102,8 @@ router.put("/shop/updatesalescount", verify, (req, res) => {
 
 router.put('/shop/update/item', verify, (req, res) => {
     const { id } = req.body;
-    console.log("hi")
-    console.log(res.body)
     Item.findOne({_id: id}, (err, data) => {
-        Object.assign(data, req.body);
+        Object.assign(data, {...req.body, itemimage: req.body.itemImageFileUrl});
         data.save((err, data) => {
             if(err) res.status(400).send(err.message)
             else res.status(200).send("Item updated");

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { connection } = require('../dbConfig');
 const verify = require('./verifyToken');
 const { v4: uuidv4 } = require('uuid');
+const mongoose = require('mongoose');
 
 const Order = require('../model/Order');
 const OrderItem = require('../model/OrderItem')
@@ -25,10 +26,11 @@ router.post("/order", verify, (req, res) => {
 
 router.post("/order/addItems", verify, (req, res) => {
     const { orderId, items } = req.body;
+    // console.log(orderId);
     var datetime = new Date();
     let error = false;
     items.forEach((item) => {
-      console.log(item)
+      // console.log(item)
       const orderitem = new OrderItem({
         orderid: orderId,
         itemid: item.id,
@@ -42,7 +44,7 @@ router.post("/order/addItems", verify, (req, res) => {
           console.log(err.message)
           if(!error) error = true;
         }
-        else console.log(result)
+        // else console.log(result)
       })
     });
     if(error) res.status(400).send("error occured while adding items");

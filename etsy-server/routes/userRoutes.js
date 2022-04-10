@@ -58,7 +58,7 @@ router.get('/profile', verify, (req, res) => {
 router.put('/update/profile', verify, (req, res) => {
   //  const {emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
    Users.findOne({_id: req.user.id}, (err, result) => {
-    console.log(result);
+    // console.log(result);
     Object.assign(result, req.body);
     result.save(
       (err, data) => {

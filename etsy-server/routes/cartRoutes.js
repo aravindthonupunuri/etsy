@@ -5,7 +5,7 @@ const Cart = require('../model/Cart');
 
 router.post('/cart/additem', verify, (req, res) => {
     const { itemid, shopname, quantity} = req.body;
-    console.log(req.user.id + itemid)
+    // console.log(req.user.id + itemid)
     var cart = new Cart({
       itemid: itemid,
       userid: req.user.id,
