@@ -69,7 +69,6 @@ export default function Profile() {
                 mode: 'cors'
             })
             let result = await res.json();
-            result = result[0];
             setProfileDetails(result);
         }, [
             // updatedProfileToggle
@@ -133,7 +132,7 @@ export default function Profile() {
                         favouriteItem => (
                             <Col sm={3} key={favouriteItem.id}>
                                 <React.Fragment>
-                                    <ItemComponent id={favouriteItem.id} item={favouriteItem} />
+                                    <ItemComponent id={favouriteItem._id} item={favouriteItem} />
                                 </React.Fragment>
                             </Col>
                         )

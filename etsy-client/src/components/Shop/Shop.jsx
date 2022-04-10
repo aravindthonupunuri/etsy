@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Container, Form, FormControl, Row } from 'react-bootstrap';
+import { Col, Container, FormControl, Row } from 'react-bootstrap';
 import backendServer from '../../webconfig';
 import Appbar from '../Appbar/Appbar';
 import Item from '../Item/Item';
@@ -56,7 +56,6 @@ export default function Shop() {
                 mode: 'cors'
             })
             let result = await res.json();
-            result = result[0];
             setUserDetails(result);
         }, []
     )
@@ -204,10 +203,10 @@ export default function Shop() {
                     <Row>
                         {shopItems.map(
                             shopItem => (
-                                <Col sm={4} key={shopItem.id}>
+                                <Col sm={4} key={shopItem._id}>
                                     <React.Fragment>
                                         <div style={{display: 'flex'}}>
-                                            <ItemComponent id={shopItem.id} item={shopItem} />
+                                            <ItemComponent id={shopItem._id} item={shopItem} />
                                             <UpdateItem item={shopItem} modalClosed={modalClosed} />
                                         </div>
                                     </React.Fragment>

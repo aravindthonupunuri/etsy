@@ -25,6 +25,8 @@ const initialState = {
   
       case 'removeItemFromCart':
         const id = action.payload;
+        console.log(state.cartItems)
+        console.log(id)
         return {
           ...state,
           cartItems: state.cartItems.filter((x) => x.id !== id),

@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import backendServer from '../../webconfig';
 import EditIcon from '@mui/icons-material/Edit';
 import noItemImage from "../../images/noitemimage.jpeg";
 import getFirebaseImage from "../../Helper/getFirebaseImage";
 
 export default function UpdateItem(props) {
-    const dispatch = useDispatch();
 
     const [itemImageFile, setItemImageFile] = useState(noItemImage);
     const [itemImageFileUrl, setItemImageFileUrl] = useState(props.item.itemimage);
@@ -18,12 +16,10 @@ export default function UpdateItem(props) {
         setItemImageFileUrl(downloadURL);
     }
 
-
-    // let shopname = props.shopname;
     const [show, setShow] = useState(false);
     const [{ id, itemname, description, price, available_quantity, category }, setState] = useState(
         {
-            id: props.item.id,
+            id: props.item._id,
             itemname: props.item.itemname,
             itemimage: itemImageFileUrl,
             description: props.item.description,
@@ -58,7 +54,6 @@ export default function UpdateItem(props) {
                 category
             }),
         })
-        // dispatch()
         handleClose()
     }
 

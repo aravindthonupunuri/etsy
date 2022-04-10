@@ -20,7 +20,7 @@ export default function ItemDetails() {
     const currency = useSelector(state => state.currencyState)
     const itemDetails = location.state.item;
     let [item] = useState({
-        id: itemDetails.id,
+        id: itemDetails._id,
         itemname: itemDetails.itemname,
         itemimage: itemDetails.itemimage,
         description: itemDetails.description,

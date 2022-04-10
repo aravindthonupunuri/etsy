@@ -1,6 +1,4 @@
-import {
-  Navbar, Nav, FormControl, Form, ListGroupItem, Container, Button,
-} from 'react-bootstrap';
+import { Navbar, Nav, FormControl, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import * as FaIcons from 'react-icons/fa';
 import logo from '../../images/logo.png';

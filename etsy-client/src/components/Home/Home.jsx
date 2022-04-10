@@ -127,7 +127,6 @@ export default function Home() {
     filteredHomeItems(res);
   }
 
-
   if (token === null) return <Redirect to="/login" />;
   else
     return (
@@ -174,12 +173,14 @@ export default function Home() {
         <Container>
           <Row>
             {
-              filtItems.map(
+              filtItems.map(                
                 homeItem =>
+                
                 (
-                  <Col sm={3} key={homeItem.id}>
+                  
+                  <Col sm={3} key={homeItem._id}>
                     <>
-                      <ItemComponent id={homeItem.id} item={homeItem} />
+                      <ItemComponent id={homeItem._id} item={homeItem} />
                       <br /><br /><br />
                     </>
                   </Col>

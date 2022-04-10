@@ -17,6 +17,7 @@ function Cart() {
   const hist = useHistory();
 
   const removeItem = (item) => {
+    console.log(item)
     dispatch(removeFromCart(item.id));
     totalPrice -= item.price * item.requestedQuantity;
   };
@@ -75,11 +76,13 @@ function Cart() {
       body: JSON.stringify({ price: totalPrice }),
     });
     if (response.ok) {
-      let orderId = await response.text();
+      let orderId = await response.json();
       const order = {
         orderId: orderId,
         items: cartItems,
       };
+      console.log("hi")
+      console.log(order)
       let addItemsResponse = await fetch(
         `${backendServer}/api/order/addItems`,
         {
@@ -107,7 +110,7 @@ function Cart() {
           }
         );
 
-        hist.push("/mypurchases");
+        // hist.push("/mypurchases");
         dispatch(clearCart());
         for (let i = 0; i < cartItems.length; i++) {
           let data = {
