@@ -1,143 +1,92 @@
 const router = require('express').Router();
-const { connection } = require('../dbConfig');
 const verify = require('./verifyToken');
-const { v4: uuidv4 } = require('uuid');
+
+const Shop = require('../model/Shop');
+const Item = require('../model/Item');
+const User = require('../model/User');
 
 router.get('/shop', verify, async (req, res) => {
-    try {
-        let results = await getShops();
-        let result = results.filter(
-            res => res.shopownerId == req.user.id
-        )
-        res.status(200).send(result);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+    Shop.find((err, results) => {
+        if(err) res.status(400).send(error.message);
+        else {
+            let result = results.filter(
+                res => res.shopownerId == req.user.id
+            )
+            res.status(200).send(result);
+        }
+    })
 })
 
 router.get('/shop/:shopName', verify, async (req, res) => {
     const {shopName} = req.params;
-    try {
-        let results = await getShops();
-        let result = results.filter(
-            res => res.shopname == shopName
-        )
-        res.status(200).send(result);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+    Shop.find((err, results) => {
+        if(err) res.status(400).send(error.message);
+        else {
+            let result = results.filter(
+                res => res.shopname == shopName
+            )
+            res.status(200).send(result);
+        }
+    })
 })
 
 router.get('/shopOwnerProfile/:shopOwnerId', verify, async (req, res) => {
     const {shopOwnerId} = req.params;
-    connection.query(
-        "SELECT * from User user where user.id = ?", [shopOwnerId],
-        (err, result) => {
-            if(err){
-              res.status(400).send(error.message);
-            } else {
-                res.status(200).send(result);
-            }
-        }
-    )
+    User.find({_id: shopOwnerId}, (err, data) => {
+        if(err) res.status(400).send(error.message); 
+        else res.status(200).send(data);       
+    })
 })
 
-getShops = () => {
-    return new Promise((resolve, reject) => {
-        connection.query(
-            "SELECT * FROM Shop", (error, results) => {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(results);
-            }
-        )
-    })
-}
-
-
 router.post('/upload/shop', verify, (req, res) => {
-    const {shopname, shopimage, salescount} = req.body;
-
-    try {
-        getShops().then( (result) => {
-            let shops = [];
-            result.forEach(r => {
-                shops.push(r.shopname)
-            });
-            if(shops.indexOf(shopname) == -1)
-            {
-                connection.query(
-                    "INSERT INTO Shop (shopname, shopimage, shopownerId, salescount) values (?,?,?,?)",
-                    [shopname, shopimage, req.user.id, salescount],
-                    (error, results) =>{
-                        if(error) {
-                            res.status(400).send(error.message);
-                        } else {
-                            res.status(200).send(results);
-                        }
-                    }
-                )
-            }
-            else
-            {
-                res.status(206).send("Shop name already present");
-            }
-        })
-        .catch(e => {
-            console.log('There has been a problem with your promise operation: ' + e.message);
-        });
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+    Shop.find((err, data) => {
+        const filteredData = data.filter( singledata => singledata.shopname === res.shopname)    
+        if(filteredData.length != 0)  res.status(206).send("Shop name already present");
+        else {var newShop = new Shop({...req.body, shopownerId: req.user.id})
+        newShop.save((err, data) => {
+            if(err) res.status(400).send(err.message);
+            res.status(200).send(data);
+        })}
+    })
 })
 
 router.post('/shop/add/item', verify, (req, res) => {
     const { itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
-    connection.query(
-        "INSERT INTO Items (id, itemname, itemimage, description, price, available_quantity, category, shopname) values (?,?,?,?,?,?,?,?)",
-        [uuidv4(), itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname],
-        (error, result) =>{
-            if(error) {
-                res.status(400).send(error.message)
-            } else {
-                res.status(200).send("Item successfully added to shop");
-            }
-        }
-    )
+    const newitem = new Item({
+        itemname, 
+        itemimage: itemImageFileUrl,
+        description, price, available_quantity,
+        category: categoryid, shopname
+    })
+    newitem.save((err, data) => {
+        if(err) res.status(400).send(err.message)
+        else res.status(200).send("Item successfully added to shop");
+    })
 })
 
 router.put('/shop/update/itemQuantity', verify, (req, res) => {
     const { updated_quantity, id } = req.body;
 
-    let sql = "UPDATE Items SET available_quantity = ? where id = ?";
-
-    connection.query(
-        sql, [updated_quantity, id],
-        (error, result) =>{
-            if(error) {
-                res.status(400).send(error.message)
-            } else {
-                res.status(200).send("Item updated");
-            }
-        }
-    )
+    Item.findOne({_id: id}, (err, data) => {
+        Object.assign(data, {available_quantity: updated_quantity});
+        data.save((err, data) => {
+            if(err) res.status(400).send(err.message)
+            else res.status(200).send("Item quantity updated");
+        })
+    })
 })
 
 router.put("/shop/updatesalescount", verify, (req, res) => {
-    const { salesCountMap } = req.body;
+  const { salesCountMap } = req.body;
   let error = false;
     salesCountMap.forEach((mapping) => {
-      connection.query(
-        "UPDATE Shop SET salescount = ? where shopname = ?",
-        [mapping.salescount, mapping.shopname],
-        (err, result) => {
-          if (err) {
-            error = true;
-          }
-        }
-      );
+        Shop.find({shopname: mapping.shopname}, (err, data) => {
+            if(err) error = true;
+            else {
+                Object.assign(data, {salescount: mapping.salescount})
+                data.save()
+            }
+        })
     });
   
     if (error) {
@@ -148,51 +97,35 @@ router.put("/shop/updatesalescount", verify, (req, res) => {
   });
 
 router.put('/shop/update/item', verify, (req, res) => {
-    const { id, itemname, itemImageFileUrl, description, price, available_quantity, category} = req.body;
-
-    let sql = "UPDATE Items SET itemname = ?, itemimage = ?, description = ?, price = ?, category = ?, available_quantity = ? where id = ?";
-
-    connection.query(
-        sql, [itemname, itemImageFileUrl, description, price, category, available_quantity, id],
-        (error, result) =>{
-            if(error) {
-                console.log(error)
-                res.status(400).send(error.message)
-            } else {
-                res.status(200).send("Item updated");
-            }
-        }
-    )
+    const { id } = req.body;
+    console.log("hi")
+    console.log(res.body)
+    Item.findOne({_id: id}, (err, data) => {
+        Object.assign(data, req.body);
+        data.save((err, data) => {
+            if(err) res.status(400).send(err.message)
+            else res.status(200).send("Item updated");
+        })
+    })
 })
 
 router.get('/shop/items/:shopname', verify, (req, res) => {
     const {shopname} = req.params;
-    
-    connection.query(
-        "SELECT * FROM Items where shopname = ?" , [shopname] , (err, result) =>{
-            if(err) {
-                res.status(400).send(err);
-            } else {
-                res.send(result);
-            }
-        }
-    )
+    Item.find({shopname: shopname}, (err, data) => {
+        if(err) res.status(400).send(err.message);
+        else res.send(data);
+    })
 })
 
 router.put("/shop/uploadImage", verify, (req, res) => {
     const { shopname, shopimage } = req.body;
-  
-    connection.query(
-      "UPDATE Shop SET shopimage = ? where shopname = ?",
-      [shopimage, shopname],
-      (error, result) => {
-        if (error) {
-          res.status(400).send(error.message);
-        } else {
-          res.status(200).send("Image uploaded");
+    Shop.find({shopname: shopname}, (err, data) => {
+        if(err) res.status(400).send(err.message);
+        else {
+            Object.assign(data, {shopimage: shopimage})
+            data.save()
         }
-      }
-    );
+    })
   });
 
 module.exports = router;

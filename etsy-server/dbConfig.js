@@ -4,10 +4,10 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 config = {
-    host: 'etsyaws.chglohlvtuj2.us-east-2.rds.amazonaws.com',
-    user: 'aravind',
+    host: 'localhost',
+    user: 'root',
     password: 'password',
-    database: 'EtsyDb',
+    database: 'etsy',
     port: 3306,
     insecureAuth : true
  }

@@ -1,142 +1,126 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
 const verify = require('./verifyToken');
 
-const db = require('../dbConfig');
-var connection = db.connection;
+const Users = require('../model/User');
+const Favourites = require('../model/Favourites')
 
 router.post('/register', async (req, res) => {
     const {name, emailId, password} = req.body;
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
-    connection.query(
-        "INSERT INTO User (id, username, emailId, password, phonenumber, profilePicture, gender, city, country, dateofbirth, address) values (?,?,?,?,?,?,?,?,?,?,?)",
-        [uuidv4(), name, emailId, hashPassword, null, null, null, null, null, null, null],
-        (error, result) =>{
-            if(error) {
-                res.status(400).send(error.message)
-            } else {
-                res.status(200).send("User successfully registered");
-            }
-        }
+    var newUser = new Users(
+      {
+        username: name,
+        emailId: emailId,
+        password: hashPassword
+      }
     )
+    Users.findOne({emailId: emailId}, (error, user) => {
+      if (user) {res.status(400).send("email id already exists")}
+      else {
+        newUser.save(() => {
+          res.send("user registered successfully")
+        })
+      }
+    })
 })
 
 router.post('/login', (req, res) => {
     const {emailId, password} = req.body;
-    connection.query('SELECT * FROM User WHERE emailId = ?',[emailId], async function (error, result) {
-        if (error) 
-        {
-          res.status(400).send(error.message);
-        }
-        else
-        {
-          if(result.length > 0) 
+    Users.findOne({emailId: emailId}, async (err, data) => {
+      if(err) res.status(400).send("invalid emailId");
+      else {
+        if(!data) res.status(204).send('invalid password'); 
+        else {
+          const comparision = await bcrypt.compare(password, data.password);
+          if(comparision)
           {
-            const comparision = await bcrypt.compare(password, result[0].password);
-            if(comparision)
-            {
-                const token = jwt.sign({id : result[0].id}, process.env.Token_Secret);
-                res.header('auth-token', token).status(200).send(token);
-            }
-            else
-              res.status(204).send('Email and password does not match');
+              const token = jwt.sign({id : data._id}, process.env.Token_Secret);
+              res.header('auth-token', token).status(200).send(token);   
           }
           else
-          {
-            res.status(206).send('Email does not exits');
-          }
-        }
-    });
+            res.status(204).send('Email and password does not match'); 
+        }       
+      }
+    })
 })
 
 router.get('/profile', verify, (req, res) => {
-    connection.query(
-        "SELECT * from User user where user.id = ?", [req.user.id],
-        (err, result) => {
-            if(err){
-              res.status(400).send(error.message);
-            } else {
-                res.status(200).send(result);
-            }
-        }
-    )
+  Users.findOne({_id: req.user.id}, (err, result) => {
+    if(err) res.status(400).send("invaid user");
+    else res.status(200).send(result);
+  })
 })
 
 router.put('/update/profile', verify, (req, res) => {
-   const {emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
-   let sql = "UPDATE User SET emailId = ?, username = ?, profilePicture = ?, phonenumber = ?, gender = ?, city = ?, country = ?, dateofbirth = ?, address = ?, about = ? where id = ?";
-   connection.query(
-    sql, [emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about, req.user.id],
-    (err, result) =>{
-        if(err){
-          res.status(400).send(error.message);
-        } else {
-            res.status(200).send(result);
-        }
-    }
+  //  const {emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about} = req.body;
+   Users.findOne({_id: req.user.id}, (err, result) => {
+    console.log(result);
+    Object.assign(result, req.body);
+    result.save(
+      (err, data) => {
+      if(err) { console.log(err); res.status(400).send("error while updating profile")}
+      else res.status(200).send(data) 
+      }
+    )
+   }
   )
 })
 
 router.put("/uploadProfilePic", verify, (req, res) => {
   const {image} = req.body;
-  connection.query(
-      "UPDATE User SET profilePicture = ? where id = ?",
-      [image, req.user.id],
-      (err, result) =>{
-          if(err){
-            res.status(400).send(error.message);
-          } else {
-              res.status(200).send(result);
-          }
+  const obj = {profilePicture: image}
+  Users.findOne({_id: req.user.id}, (err, result) => {
+    Object.assign(result, obj);
+    result.save(
+      (err, data) => {
+      if(err) { console.log(err); res.status(400).send("error while updating profile image")}
+      else res.status(200).send(data) 
       }
-  )
+    )
+  })
 });
 
 router.post("/add/favourite", verify, (req, res) => {
   const {itemId} = req.body;
-  connection.query(
-      "INSERT into Favourites(id, itemId, userId) values(?,?,?)",
-      [uuidv4(), itemId, req.user.id],
-      (err, result) =>{
-          if(err){
-            res.status(400).send(err.message);
-          } else {
-              res.status(200).send(result);
-          }
-      }
+  var fav = new Favourites(
+    {
+      itemId: itemId,
+      userId: req.user.id
+    }
   )
+  fav.save((err, result) =>{
+    if(err){
+      res.status(400).send(err.message);
+    } else {
+        res.status(200).send(result);
+    }
+  })
 });
 
 router.get("/favourites", verify, (req, res) => {
-  connection.query(
-      "SELECT * FROM Favourites where userId = ?", [req.user.id],
-      (err, result) => {
-          if(err){
-            res.status(400).send(err.message);
-          } else {
-              res.status(200).send(result);
-          }
-      }
-  )
+  Favourites.find({userId: req.user.id}, (err, result) => {
+    if(err){
+      res.status(400).send(err.message);
+    } else {
+        res.status(200).send(result);
+    }
+})
 });
 
 router.delete("/favourites/:itemId", verify, (req, res) => {
   const {itemId} = req.params;
   // console.log("in delete fav" + itemId)
-  connection.query(
-    "DELETE FROM Favourites where itemId = ?", [itemId],
-    (err, result) => {
-        if(err){
-          res.status(400).send(err.message);
-        } else {
-            res.status(200).send(result);
-        }
+  Favourites.deleteOne({itemId: itemId}, (err, result) => {
+    if(err){
+      res.status(400).send(err.message);
+    } else {
+        res.status(200).send(result);
     }
-)  
+})  
 })
 
 

@@ -3,22 +3,24 @@ const { connection } = require('../dbConfig');
 const verify = require('./verifyToken');
 const { v4: uuidv4 } = require('uuid');
 
+const Order = require('../model/Order');
+const OrderItem = require('../model/OrderItem')
+
 router.post("/order", verify, (req, res) => {
     const { price } = req.body;
     var datetime = new Date();
-    var orderid = uuidv4();
-    connection.query(
-      "INSERT INTO Orders (id, userid, total, createdtime) values (?,?,?,?)",
-      [orderid, req.user.id, price, datetime],
-      (error, result) => {
-        if (error) {
-        //   console.log(error);
-          res.status(400).send(error.message);
-        } else {
-          res.status(200).send(orderid);
-        }
+    const order = new Order({
+      userid: req.user.id,
+      total: price,
+      createdtime: datetime
+    })
+    order.save((error, result) => {
+      if (error) {
+        res.status(400).send(error.message);
+      } else {
+        res.status(200).send(result._id);
       }
-    );
+    })
   });
 
 router.post("/order/addItems", verify, (req, res) => {
@@ -26,25 +28,22 @@ router.post("/order/addItems", verify, (req, res) => {
     var datetime = new Date();
     let error = false;
     items.forEach((item) => {
-      var orderLineitemId = uuidv4();
-      connection.query(
-        `INSERT into OrderItems(id, orderid, itemid, shopname, price, quantity, createdtime) 
-         values(?,?,?,?,?,?,?)`,
-        [
-          orderLineitemId,
-          orderId,
-          item.id,
-          item.shopname,
-          item.price,
-          item.requestedQuantity,
-          datetime,
-        ],
-        (err, result) => {
-          if (err) {
-            if(!error) error = true;
-          }
+      console.log(item)
+      const orderitem = new OrderItem({
+        orderid: orderId,
+        itemid: item.id,
+        shopname: item.shopname,
+        price: item.price,
+        quantity: item.requestedQuantity,
+        createdtime: datetime,
+      })
+      orderitem.save((err, result) => {
+        if (err) {
+          console.log(err.message)
+          if(!error) error = true;
         }
-      );
+        else console.log(result)
+      })
     });
     if(error) res.status(400).send("error occured while adding items");
     else res.status(200).send("values inserted")
