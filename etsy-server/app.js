@@ -9,6 +9,9 @@ var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 //import cors
 var cors = require('cors');
+// const passport = require('passport');
+// require('./Utils/passport')
+// app.use(passport.initialize());
 
 // const config = {
    const mongoDB = 'mongodb+srv://EtsyDb:aravind1234@etsycluster.4fknc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'

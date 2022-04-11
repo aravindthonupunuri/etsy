@@ -38,6 +38,10 @@ router.post('/login', (req, res) => {
           const comparision = await bcrypt.compare(password, data.password);
           if(comparision)
           {
+            // const payload = { id: data._id };
+            // const token = jwt.sign(payload, process.env.Token_Secret, {
+            //     expiresIn: 1008000
+            // });
               const token = jwt.sign({id : data._id}, process.env.Token_Secret);
               res.header('auth-token', token).status(200).send(token);   
           }
