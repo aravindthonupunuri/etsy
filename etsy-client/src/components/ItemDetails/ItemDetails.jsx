@@ -5,7 +5,6 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import { useLocation } from 'react-router-dom';
 import Appbar from "../Appbar/Appbar";
 import { Link } from "react-router-dom";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
 import { addItemToCart } from "../../actions/cartAction";

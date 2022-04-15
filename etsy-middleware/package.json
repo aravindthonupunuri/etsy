@@ -2,7 +2,7 @@
   "name": "etsy-server",
   "version": "1.0.0",
   "description": "etsy Server side",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha || true",
     "start": "nodemon app.js"

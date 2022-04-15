@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import backendServer from "../../webconfig";
-import { Card, Container, Col, Row, Alert } from "react-bootstrap";
+import { Card, Container, Col, Row, Alert, Form } from "react-bootstrap";
 import Appbar from '../Appbar/Appbar';
+import Pagination from '../Pagination/Pagination';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(5);
 
   useEffect(() => {
     getOrders();
   }, []);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentOrders = orders.slice(indexOfFirstPost, indexOfLastPost);
+
+  const paginate = pageNumber => setCurrentPage(pageNumber);
 
   const getOrders = async () => {
     const token = sessionStorage.getItem("token");
@@ -28,9 +37,9 @@ function Orders() {
 
   let message = null;
   let orderCards = null;
-
+  console.log("orderes length " + orders.length)
   if (orders.length > 0) {
-    orderCards = orders.map((order) => (
+    orderCards = currentOrders.map((order) => (
       <Card style={{ width: "70rem", margin: "2%" }}>
         <Card.Body>
           <Row style={{ fontSize: "12px" }}>
@@ -72,7 +81,7 @@ function Orders() {
           </Row>
         </Card.Body>
       </Card>
-    ));
+    ));    
   } else {
     message = (
       <Alert variant="warning">
@@ -85,8 +94,21 @@ function Orders() {
       <Appbar />
       <Container className="justify-content">
         <h3 style={{ marginRight: "70px" }}>My purchases</h3>
+        <Form.Select style={{ width: '300px', marginBottom: '20px' }}
+                onChange={(e) => setPostsPerPage(e.target.value)
+                }>
+                <option value="100">page size</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+              </Form.Select>
         {message}
         {orderCards}
+        <Pagination 
+        postsPerPage={postsPerPage}
+        totalPosts={orders.length}
+        paginate={paginate}
+      />
       </Container>
     </div>
   );

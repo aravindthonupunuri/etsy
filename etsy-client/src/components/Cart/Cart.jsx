@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Appbar from '../Appbar/Appbar';
 import { removeFromCart, clearCart } from "../../actions/cartAction";
 import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import { useHistory } from 'react-router';
 import backendServer from '../../webconfig';
+import CartItem from '../CartItem/CartItem';
 
 require("./Cart.css");
 
@@ -12,14 +13,12 @@ function Cart() {
   const cart = useSelector((state) => state.cartState);
   const currency = useSelector(state => state.currencyState)
   const { cartItems } = cart;
-
+  const [totalPrice, setTotalPrice] = useState(0);
   const dispatch = useDispatch();
   const hist = useHistory();
-
   const removeItem = (item) => {
-    console.log(item)
     dispatch(removeFromCart(item.id));
-    totalPrice -= item.price * item.requestedQuantity;
+    setTotalPrice(totalPrice - item.price * item.requestedQuantity);
   };
 
   const salescount = async (shopname) => {
@@ -110,7 +109,7 @@ function Cart() {
           }
         );
 
-        // hist.push("/mypurchases");
+        hist.push("/mypurchases");
         dispatch(clearCart());
         for (let i = 0; i < cartItems.length; i++) {
           let data = {
@@ -134,39 +133,22 @@ function Cart() {
     }
   };
 
-  const itemsRender = [];
-  let totalPrice = 0;
-  for (let i = 0; i < cartItems.length; i += 1) {
-    const item = (
-      <tr>
-        <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>{cartItems[i].name}</div>
-        </td>
-        <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>          
-            {cartItems[i].price} {" "} {currency.currency}
-          </div>
-        </td>
-        <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>
-            {cartItems[i].requestedQuantity}
-          </div>
-        </td>
-        <td style={{ position: "relative" }}>
-          <div style={{ paddingTop: "7px" }}>            
-            {cartItems[i].price * cartItems[i].requestedQuantity} {" "} {currency.currency}
-          </div>
-        </td>
-        <td align="center">
-          <Button variant="light" onClick={() => removeItem(cartItems[i])}>
-            Remove
-          </Button>
-        </td>
-      </tr>
-    );
-    totalPrice += cartItems[i].price * cartItems[i].requestedQuantity;
-    itemsRender.push(item);
+  const evaluatePrice = () => {
+    renderTotalPrice()
   }
+
+  const renderTotalPrice = () => {
+    console.log("in render total price")
+    let totalPriceTemp = 0;
+    for (let i = 0; i < cartItems.length; i += 1) {
+      totalPriceTemp += cartItems[i].price * cartItems[i].requestedQuantity;
+    }
+    console.log(totalPriceTemp)
+    setTotalPrice(totalPriceTemp)
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(renderTotalPrice, [cartItems])
 
   return (
     <div>
@@ -186,22 +168,25 @@ function Cart() {
             <th>Total Price</th>
           </thead>
           <tbody>
-            {itemsRender}
+            {cartItems.map(cartItem =>
+              <tr>
+                <CartItem key={cartItem.id} cartItem={cartItem} removeItem={removeItem} evaluatePrice={evaluatePrice} />
+              </tr>)}
             <br />
             <br />
             <br />
             <div style={{ position: "absolute", right: "330px" }}>
               <b>Total</b>
               <b>
-                 {totalPrice} {" "} {currency.currency}
+                {totalPrice} {" "} {currency.currency}
               </b>
             </div>
           </tbody>
         </Table>
         <div class="col-md-12 text-center">
-        <Button style = {{justify: 'center'}} variant="success" onClick={(e) => placeOrder(e)}>
-          Place order
-        </Button>
+          <Button style={{ justify: 'center' }} variant="success" onClick={(e) => placeOrder(e)}>
+            Place order
+          </Button>
         </div>
       </Container>
     </div>
