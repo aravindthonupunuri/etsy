@@ -32,6 +32,7 @@ router.post("/order/addItems", verify, (req, res) => {
         shopname: item.shopname,
         price: item.price,
         quantity: item.requestedQuantity,
+        message: item.message,
         createdtime: datetime,
       })
       orderitem.save((err, result) => {
@@ -62,6 +63,7 @@ router.post("/order/addItems", verify, (req, res) => {
         createdTime: doc.createdtime,
         itemname: doc.itemid.itemname,
         itemimage: doc.itemid.itemimage,
+        message: doc.message
         }
       }))
     })

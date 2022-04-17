@@ -5,6 +5,7 @@ var orderItemSchema = new Schema({
     itemid: {type: mongoose.Types.ObjectId, required: true, ref: 'item'},
     price: {type: String},
     quantity: {type: String},
+    message: {type: String},
     shopname: String,
     createdtime: Date
 });

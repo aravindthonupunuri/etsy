@@ -166,6 +166,7 @@ function Cart() {
             <th>Price</th>
             <th>Quantity</th>
             <th>Total Price</th>
+            <th>Gift Card</th>
           </thead>
           <tbody>
             {cartItems.map(cartItem =>

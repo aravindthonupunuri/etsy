@@ -78,6 +78,9 @@ function Orders() {
             <Col style={{ marginTop: "90px" }} align="center">
               <b>Price:</b> {order.price}
             </Col>
+            <Col style={{ marginTop: "90px" }} align="center">
+              <b>Gift Message:</b> {order.message}
+            </Col>            
           </Row>
         </Card.Body>
       </Card>
