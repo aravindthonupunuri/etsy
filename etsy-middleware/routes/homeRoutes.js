@@ -1,15 +1,29 @@
 const router = require('express').Router();
 const verify = require('./verifyToken');
-const { checkAuth } = require("../Utils/passport");
 const passport = require('passport');
 require('../Utils/passport')
 router.use(passport.initialize());
 
 const Item = require('../model/Item');
-// const passport = require('passport');
 
-router.get('/items', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Item.find((err, result) =>{
+router.get('/items',  
+(req, res, next) => {
+    passport.authenticate('jwt', {session: false}
+    , (err, user) => {
+        if(!user) return res.status(400).send("rubbish");
+        console.log(user)
+        console.log("ppp")
+        req.user = user
+        next();
+    }
+    )
+    (req, res); 
+}
+,
+ (req, res) => {
+    console.log("in home items")
+    console.log(req.user)
+    Item.find((err, result) => {
         if(err) {
             console.log(err);
             res.status(400).send(err);
@@ -17,7 +31,8 @@ router.get('/items', passport.authenticate('jwt', {session: false}), (req, res) 
             res.send(result);
         }
     })
-})
+}
+)
 
 router.get('/item/:itemId', verify, (req, res) => {
     const {itemId} = req.params;

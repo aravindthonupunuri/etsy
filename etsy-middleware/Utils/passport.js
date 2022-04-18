@@ -7,15 +7,20 @@ opts.secretOrKey = 'shishilid';
 const passport = require("passport");
 const User = require('../model/User');
 
+
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({_id: jwt_payload.id}, function(err, user) {
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-        }
-    });
+    const user = {id: jwt_payload.id}
+    console.log("in pasport")
+    // User.findOne({_id: jwt_payload.id}, function(err, user) {
+    //     if (err) {
+    //         return done(err, false);
+    //     }
+    //     if (user) {
+    //         return done(null, user);
+    //     } else {
+    //         return done(null, false);
+    //     }
+    // });
+    // return done(null, null)
+    return done(null, user);
 }));
