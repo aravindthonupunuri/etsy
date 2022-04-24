@@ -1,3 +1,3 @@
-const backendServer = 'http://3.15.31.82:3001';
+const backendServer = 'http://3.135.196.114:3001';
 
 export default backendServer;
