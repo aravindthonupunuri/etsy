@@ -74,19 +74,13 @@ router.put("/uploadProfilePic", verify, (req, res) => {
 });
 
 router.post("/add/favourite", verify, (req, res) => {
-  const {itemId} = req.body;
-  var fav = new Favourites(
-    {
-      itemId: itemId,
-      userId: req.user.id
-    }
-  )
-  fav.save((err, result) =>{
-    if(err){
-      res.status(400).send(err.message);
-    } else {
-        res.status(200).send(result);
-    }
+  console.log("in add fav")
+  kafka.make_request('user-favourite', { itemId: req.body.itemId, userId: req.user.id }, function(err, results){
+    console.log('inside after kafka message')
+    console.log(results);
+    console.log("error is" + err)
+      if (!results) res.status(400).send("error while adding favourite");
+     else res.status(200).send(results); 
   })
 });
 

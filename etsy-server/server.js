@@ -21,7 +21,9 @@ require("dotenv").config();
 
 const userRegistration = require('./services/userServices/registerService');
 const userLogin = require('./services/userServices/loginService');
-const userProfile = require('./services/userServices/profileService')
+const userProfile = require('./services/userServices/profileService');
+const userFavourite = require('./services/userServices/favouriteService');
+const userOrder = require('./services/userServices/orderService');
 
 function handleTopicRequest(topic_name,fname){
 
@@ -60,3 +62,5 @@ function handleTopicRequest(topic_name,fname){
 handleTopicRequest("user-register", userRegistration)
 handleTopicRequest("user-login", userLogin)
 handleTopicRequest("user-profile", userProfile)
+handleTopicRequest("user-favourite", userFavourite)
+handleTopicRequest("user-order", userOrder)

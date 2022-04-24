@@ -77,7 +77,7 @@ function Cart() {
     if (response.ok) {
       let orderId = await response.json();
       const order = {
-        orderId: orderId,
+        orderId: orderId.results,
         items: cartItems,
       };
       console.log("hi")

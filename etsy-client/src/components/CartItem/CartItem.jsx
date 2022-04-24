@@ -23,6 +23,9 @@ function CartItem({ cartItem, removeItem, evaluatePrice }) {
       setCounter(counter - 1);
       setOutOfStock("");
     }
+    else if(counter === 1) {
+      removeItem(cartItem)
+    }
   }
 
   if (outOfStock === "") {
