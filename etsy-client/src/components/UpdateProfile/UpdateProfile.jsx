@@ -23,7 +23,8 @@ export default function UpdateProfile() {
                 mode: 'cors'
             })
             let result = await res.json();
-            result = result[0];
+            // result = result[0];
+            console.log(result)
             setProfileDetails(result);
         }, []
     )
@@ -48,7 +49,7 @@ export default function UpdateProfile() {
             profilePicture: downloadURL,
             about: profileDetails.about,
         };
-
+        debugger;
         updateUser(updatedUser);
         hist.push("/profile")
     }

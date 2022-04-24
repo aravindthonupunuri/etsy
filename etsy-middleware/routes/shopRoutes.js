@@ -121,11 +121,17 @@ router.get('/shop/items/:shopname', verify, (req, res) => {
 
 router.put("/shop/uploadImage", verify, (req, res) => {
     const { shopname, shopimage } = req.body;
-    Shop.find({shopname: shopname}, (err, data) => {
+    console.log(shopname + shopimage)
+    Shop.findOne({shopname: shopname}, (err, data) => {
         if(err) res.status(400).send(err.message);
         else {
+            console.log("hi" + data)
             Object.assign(data, {shopimage: shopimage})
-            data.save()
+            console.log(data)
+            data.save((err, data) => {
+                if(err) res.status(400).send(err.message)
+                else res.status(200).send("shop image updated");
+            })
         }
     })
   });
