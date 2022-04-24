@@ -1,4 +1,4 @@
-var connection = new require('./kafka/connection');
+var connection = new require('./kafka/Connection');
 require("dotenv").config();
 
    const mongoDB = 'mongodb+srv://EtsyDb:aravind1234@etsycluster.4fknc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
