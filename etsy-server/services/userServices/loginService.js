@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken');
 function handle_request(customerDetails, callback){
    
     console.log("Inside customerProfile kafka backend");
-    const {emailId, password} = customerDetails;
+    const {email, password} = customerDetails;
 
     if(customerDetails){
-        Users.findOne({emailId: emailId}, async (err, data) => {
+        Users.findOne({emailId: email}, async (err, data) => {
             if(err) callback(null, null);
             else {
               if(!data) callback(null, null);

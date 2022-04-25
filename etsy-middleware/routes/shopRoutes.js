@@ -51,10 +51,10 @@ router.post('/upload/shop', verify, (req, res) => {
 })
 
 router.post('/shop/add/item', verify, (req, res) => {
-    const { itemname, itemImageFileUrl, description, price, available_quantity, categoryid, shopname} = req.body;
+    const { itemname, itemimage, description, price, available_quantity, categoryid, shopname} = req.body;
     const newitem = new Item({
         itemname, 
-        itemimage: itemImageFileUrl,
+        itemimage: itemimage,
         description, price, available_quantity,
         category: categoryid, shopname
     })
@@ -120,14 +120,16 @@ router.get('/shop/items/:shopname', verify, (req, res) => {
 })
 
 router.put("/shop/uploadImage", verify, (req, res) => {
-    const { shopname, shopimage } = req.body;
+    const { name,image } = req.body;
+    let shopname = name;
+    let shopimage = image;
     console.log(shopname + shopimage)
     Shop.findOne({shopname: shopname}, (err, data) => {
         if(err) res.status(400).send(err.message);
         else {
             console.log("hi" + data)
             Object.assign(data, {shopimage: shopimage})
-            console.log(data)
+            console.log(data, "shop");
             data.save((err, data) => {
                 if(err) res.status(400).send(err.message)
                 else res.status(200).send("shop image updated");

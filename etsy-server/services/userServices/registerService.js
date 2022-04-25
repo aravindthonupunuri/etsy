@@ -5,10 +5,10 @@ function handle_request(customerDetails, callback){
    
     console.log("Inside customerProfile kafka backend");
     console.log(customerDetails);
-    const {name, emailId, password} = customerDetails;
+    const {username, email, password} = customerDetails;
 
     if(customerDetails){
-        Users.findOne({emailId: emailId}, async (err, cust) => {
+        Users.findOne({emailId: email}, async (err, cust) => {
             console.log("user find one")
         if(err) callback(null, null);
         else if(cust) callback("error", null);
@@ -17,8 +17,8 @@ function handle_request(customerDetails, callback){
             const hashPassword = await bcrypt.hash(password, salt);
             var newUser = new Users(
               {
-                username: name,
-                emailId: emailId,
+                username: username,
+                emailId: email,
                 password: hashPassword
               }
             )
