@@ -8,6 +8,11 @@ machine having node.js installed on it. Open the terminal in the folder "etsy-cl
 Execute "npm install" to install all the dependencies.
 Execute "npm start" to run the front-end server.
 
+Middle ware
+Clone the repository's middle-ware folder "etsy-middleware" into any machine having node.js and kafka installed on it. Open the terminal in the folder "etsy-middleware".
+Execute "npm install" to intall the dependencies.
+Execute "npm start" to run the middleware. Make sure that all the topics related to the kafka logic are created before doing npm start.
+
 Backend
 Clone the repository's Back-end folder "etsy-server" into any machine having node.js installed on it. Open the terminal in the folder "etsy-server".
 Execute "npm install" to install all the dependencies.
