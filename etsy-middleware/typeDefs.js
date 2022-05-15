@@ -1,20 +1,20 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  type User {
-    _id: ID!
-    username: String!,
-    emailId: String!,
-    password: String!,
-    phonenumber: String,
-    profilePicture: String,
-    gender: String,
-    city: String,
-    country: String,
-    dateofbirth: Date,
-    address: String,
-    about: String
-  }
+type User {
+  _id: ID!
+  username: String!,
+  emailId: String!,
+  password: String!,
+  phonenumber: String,
+  profilePicture: String,
+  gender: String,
+  city: String,
+  country: String,
+  dateofbirth: Date,
+  address: String,
+  about: String
+}
 
   type Favourites {
     itemId: String!,
@@ -68,13 +68,13 @@ const typeDefs = gql`
 
   type Query {
     getUserById(userId: ID): User,
-    getAllShop: Shop,
+    getAllShopByUserId(userId: ID): Shop,
     getShopByShopName(shopName: String): Shop,
     getShopOwnerDetails(shopOwnerId: ID): User,
     getShopItems(shopname: String): [Item],
     getUserProfile(userId: ID): User,
     getFavourites(userId: ID): [Favourites],
-    getUserOrders(userId: ID),
+    getUserOrders(userId: ID): [Order],
     getItems(): [Item],
     getItemsByItemId(itemId: ID): Item,
     getItemsByUserId(userId: String): [Item]
@@ -82,7 +82,7 @@ const typeDefs = gql`
 
   type Mutation {
     registerUser(emailId: String!, username: String!, password: String!): User,
-    loginUser(emailId: String!, password: String!): User,
+    loginUser(emailId: String!, password: String!): String,
     addItem(
       itemname: String!,
       shopname: String!,
@@ -93,6 +93,7 @@ const typeDefs = gql`
       category: String,
     ): Item,
     updateUserDetails(
+      userId: ID
       phonenumber: String
       dateofbirth: String
       about: String
@@ -101,26 +102,9 @@ const typeDefs = gql`
       city: String
       country: String
     ): User,
-    createShop(shopName: String): Shop,
-    addItemToShop(
-      itemname: String!,
-      shopname: String!,
-      itemimage: String,
-      description: String,
-      price: String,
-      available_quantity: Int,
-      category: String
-    ) : Item,
-    updateItem(
-      itemname: String!,
-      itemimage: String,
-      description: String,
-      price: String,
-      available_quantity: Int,
-      category: String
-    ) : Item,
+    createShop(shopName: String, userId: ID): Shop,
     createOrder( price: Int!, userId: ID!): Order,
-    createOrderItems(orderId: ID!, orderItems: [Items]): OrderItems
+    createOrderItems(orderId: ID!, orderItems: [Items]): String!
   }
 `;
 

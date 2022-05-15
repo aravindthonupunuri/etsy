@@ -20,12 +20,12 @@ const resolvers = {
       return favouriteItems;
     },
 
-    getAllShop: async (parent, { shopname }, context) => {
+    getAllShop: async (parent, { userid }, context) => {
       Shop.find((err, results) => {
         if (err) return error.message;
         else {
           let result = results.filter(
-            res => res.shopownerId == req.user.id
+            res => res.shopownerId == userid
           )
           return result;
         }
@@ -98,17 +98,17 @@ const resolvers = {
   },
 
   Mutation: {
-    registerUser: async (parent, { email, name, password }, context) => {
+    registerUser: async (parent, { emailId, username, password }, context) => {
       Users.findOne({ emailId: emailId }, async (err, cust) => {
         console.log("user find one")
-        if (err) callback(null, null);
-        else if (cust) callback("error", null);
+        if (err) return err.message;
+        else if (cust) return err.message;
         else {
           const salt = await bcrypt.genSalt(10);
           const hashPassword = await bcrypt.hash(password, salt);
           var newUser = new Users(
             {
-              username: name,
+              username: username,
               emailId: emailId,
               password: hashPassword
             }
@@ -143,14 +143,14 @@ const resolvers = {
 
   addItem: async (
     parent,
-    { itemname, itemimage, price, category, description, itemimage, shopname },
+    { itemname, shopname, itemimage, description, price, available_quantity, category },
     context
   ) => {
     const newitem = new Item({
       itemname,
       itemimage: itemimage,
       description, price, available_quantity,
-      category: categoryid, shopname
+      category: category, shopname
     })
     newitem.save((err, data) => {
       if (err) return err.message
@@ -160,12 +160,11 @@ const resolvers = {
 
   updateUserDetails: async (
     parent,
-    { emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about },
+    { userId, phonenumber, dateofbirth, about, profilePicture, address, city, country },
     context
   ) => {
-     const req = { emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about };
-    Users.findOne({ _id: req.user.id }, (err, result) => {
-      // console.log(result);
+    const req = { emailId, username, profilePicture, phonenumber, gender, city, country, dateofbirth, address, about };
+    Users.findOne({ _id: userId }, (err, result) => {
       Object.assign(result, req);
       result.save(
         (err, data) => {
@@ -175,5 +174,69 @@ const resolvers = {
       )
 
     })
+  },
+
+  createShop: async (
+    parent,
+    { shopname, userid },
+    context
+  ) => {
+    Shop.find((err, data) => {
+      const filteredData = data.filter( singledata => singledata.shopname === shopname)    
+      if(filteredData.length != 0)  res.status(206).send("Shop name already present");
+      else {var newShop = new Shop({shopname, shopownerId: userid})
+      newShop.save((err, data) => {
+          if(err) return err.message;
+          return data;
+      })}
+  })
+  },
+
+  createOrder: async (
+    parent,
+    { total, userid },
+    context
+  ) => {
+    var datetime = new Date();
+    const order = new Order({
+      userid: userid,
+      total: total,
+      createdtime: datetime
+    })
+    order.save((error, result) => {
+      if (error) {
+        return error.message
+      } else {
+        return result._id
+      }
+    })
+  },
+
+  createOrderItems: async (
+    parent,
+    { orderId, orderItems },
+    context
+  ) => {
+    var datetime = new Date();
+    let error = false;
+    orderItems.forEach((item) => {
+      const orderitem = new OrderItem({
+        orderid: orderId,
+        itemid: item.id,
+        shopname: item.shopname,
+        price: item.price,
+        quantity: item.requestedQuantity,
+        message: item.message,
+        createdtime: datetime,
+      })
+      orderitem.save((err, result) => {
+        if (err) {
+          console.log(err.message)
+          if (!error) error = true;
+        }
+      })
+      if (error) return "error occured while adding items";
+      else return "values inserted"
+    });
   }
 };
