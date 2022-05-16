@@ -152,4 +152,19 @@ export const getItemsByItemId = `
     }
 `;
 
-export const getItemsByUserId = ``
+export const getItemsByUserId = `
+query getItemsByUserId(userid: ID) {
+    getItemsByUserId(userid: $userid) {
+        {
+            _id
+            itemname
+            shopname
+            itemimage
+            description
+            price
+            available_quantity
+            category: String
+        }
+    } 
+ }
+`;
